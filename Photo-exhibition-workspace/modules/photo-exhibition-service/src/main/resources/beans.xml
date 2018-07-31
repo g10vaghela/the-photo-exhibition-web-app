@@ -1,0 +1,27 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:util="http://www.springframework.org/schema/util"
+   xsi:schemaLocation="
+      http://www.springframework.org/schema/beans 
+      http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+      http://www.springframework.org/schema/context 
+      http://www.springframework.org/schema/context/spring-context-4.1.xsd
+      http://www.springframework.org/schema/util
+      http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+	
+	<bean id="employeeInfoService" class="com.photoexhibition.service.impl.EmployeeInfoServiceImpl">
+		<property name="employeeInfoDao" ref="employeeInfoDao" />
+	</bean>
+	<bean id="generalConfigurationService" class="com.photoexhibition.service.impl.GeneralConfigurationServiceImpl">
+		<property name="generalConfigurationDao" ref="generalConfigurationDao" />
+	</bean>
+	
+    <!-- Dao Bean Section -->
+    <bean id="baseDao" class="com.photoexhibition.service.dao.BaseDao">
+    	<property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+	<bean id="employeeInfoDao" class="com.photoexhibition.service.dao.EmployeeInfoDao" parent="baseDao"></bean>
+	<bean id="generalConfigurationDao" class="com.photoexhibition.service.dao.GeneralConfigurationDao" parent="baseDao"></bean>
+</beans>      

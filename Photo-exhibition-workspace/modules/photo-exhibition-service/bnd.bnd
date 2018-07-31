@@ -1,0 +1,4 @@
+Bundle-Name: photo-exhibition-service
+Bundle-SymbolicName: com.photoexhibition.service
+Bundle-Version: 1.0.0
+Export-Package: com.photoexhibition.service.*

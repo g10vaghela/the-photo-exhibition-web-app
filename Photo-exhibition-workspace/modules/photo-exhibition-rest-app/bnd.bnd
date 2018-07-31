@@ -1,0 +1,4 @@
+Bundle-Name: photo-exhibition-rest-app
+Bundle-SymbolicName: com.photoexhibition.rest
+Bundle-Version: 1.0.0
+Liferay-Configuration-Path: /configuration
