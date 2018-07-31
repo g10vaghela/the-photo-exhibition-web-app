@@ -17,6 +17,10 @@
 		<property name="generalConfigurationDao" ref="generalConfigurationDao" />
 	</bean>
 	
+	<bean id="childInfoService" class="com.photoexhibition.service.impl.ChildInfoServiceImpl">
+		<property name="childInfoDao" ref="childInfoDao"/>
+	</bean>
+	
     <!-- Dao Bean Section -->
     <bean id="baseDao" class="com.photoexhibition.service.dao.BaseDao">
     	<property name="sessionFactory" ref="sessionFactory" />
@@ -24,4 +28,5 @@
 
 	<bean id="employeeInfoDao" class="com.photoexhibition.service.dao.EmployeeInfoDao" parent="baseDao"></bean>
 	<bean id="generalConfigurationDao" class="com.photoexhibition.service.dao.GeneralConfigurationDao" parent="baseDao"></bean>
+	<bean id="childInfoDao" class="com.photoexhibition.service.dao.ChildInfoDao" parent="baseDao"></bean>
 </beans>      

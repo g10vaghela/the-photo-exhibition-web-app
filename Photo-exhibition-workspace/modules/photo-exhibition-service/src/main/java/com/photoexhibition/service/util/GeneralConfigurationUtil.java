@@ -18,5 +18,4 @@ public class GeneralConfigurationUtil {
 	public static GeneralConfigurationInfo isContestOpenConfiguration() {
 		return getGeneralConfigurationService().getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_CONTENST_OPEN);
 	}
-
 }
