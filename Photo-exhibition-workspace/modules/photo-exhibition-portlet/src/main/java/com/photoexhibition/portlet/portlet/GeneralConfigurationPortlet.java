@@ -10,6 +10,7 @@ import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.omg.CORBA.Request;
 import org.osgi.service.component.annotations.Component;
 
 import com.liferay.portal.kernel.log.Log;
@@ -21,6 +22,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.photoexhibition.portlet.constants.ControllerPortletKeys;
 import com.photoexhibition.portlet.constants.MessageConstant;
 import com.photoexhibition.service.GeneralConfigurationService;
+import com.photoexhibition.service.constant.GeneralConfigurationConstants;
 import com.photoexhibition.service.model.GeneralConfigurationInfo;
 import com.photoexhibition.service.util.BeanLocalServiceUtil;
 
@@ -44,6 +46,12 @@ public class GeneralConfigurationPortlet extends MVCPortlet {
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
+		GeneralConfigurationInfo generalConfigurationInfo= generalConfigurationService.getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_CONTENST_OPEN);
+		if(Validator.isNotNull(generalConfigurationInfo)){
+			renderRequest.setAttribute(GeneralConfigurationConstants.IS_CONTENST_OPEN, generalConfigurationInfo);
+		} else {
+			renderRequest.setAttribute(GeneralConfigurationConstants.IS_CONTENST_OPEN, null);
+		}
 		super.render(renderRequest, renderResponse);
 	}
 	
