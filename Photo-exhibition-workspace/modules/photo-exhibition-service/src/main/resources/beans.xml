@@ -25,6 +25,9 @@
 	<bean id="viewerInfoService" class="com.photoexhibition.service.impl.ViewerInfoServiceImpl">
 		<property name="viewerInfoDao" ref="viewerInfoDao"/>
 	</bean>
+	<bean id="childViewerLikeInfoService" class="com.photoexhibition.service.impl.ChildViewerLikeInfoServiceImpl">
+		<property name="childViewerLikeInfoDao" ref="childViewerLikeInfoDao"/>
+	</bean>
 
     <!-- Dao Bean Section -->
     <bean id="baseDao" class="com.photoexhibition.service.dao.BaseDao">
@@ -35,4 +38,5 @@
 	<bean id="generalConfigurationDao" class="com.photoexhibition.service.dao.GeneralConfigurationDao" parent="baseDao"></bean>
 	<bean id="childInfoDao" class="com.photoexhibition.service.dao.ChildInfoDao" parent="baseDao"></bean>
 	<bean id="viewerInfoDao" class="com.photoexhibition.service.dao.ViewerInfoDao" parent="baseDao"></bean>
+	<bean id="childViewerLikeInfoDao" class="com.photoexhibition.service.dao.ChildViewerLikeInfoDao" parent="baseDao"></bean>
 </beans>      

@@ -5,14 +5,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="child_")
 public class ChildInfo {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "child_info_seq")
+	@SequenceGenerator(name = "child_info_seq",  sequenceName = "child_info_seq",allocationSize=1, initialValue = 1)
+	@Column(name = "child_id")
+	private long childId;
 	
 	@Column(name="first_name")
 	private String firstName;
@@ -32,12 +35,12 @@ public class ChildInfo {
 	@Column(name="rank")
 	private long childRank;
 
-	public long getId() {
-		return id;
+	public long getChildId() {
+		return childId;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setChildId(long childId) {
+		this.childId = childId;
 	}
 
 	public String getFirstName() {
@@ -90,7 +93,8 @@ public class ChildInfo {
 
 	@Override
 	public String toString() {
-		return "ChildInfo [id=" + id + ", firstName=" + firstName + ", middleName=" + middleName + ", lastName="
-				+ lastName + ", contactNo=" + contactNo + ", dlFileId=" + dlFileId + ", childRank=" + childRank + "]";
+		return "ChildInfo [childId=" + childId + ", firstName=" + firstName + ", middleName=" + middleName
+				+ ", lastName=" + lastName + ", contactNo=" + contactNo + ", dlFileId=" + dlFileId + ", childRank="
+				+ childRank + "]";
 	}
 }

@@ -5,13 +5,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="viewer_")
 public class ViewerInfo {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "viewer_info_seq")
+	@SequenceGenerator(name = "viewer_info_seq",  sequenceName = "viewer_info_seq",allocationSize=1, initialValue = 1)
+	@Column(name = "viewer_id")
 	private long viewerId;
 	
 	@Column(name="mobile_number")
