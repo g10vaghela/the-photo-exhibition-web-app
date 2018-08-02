@@ -7,6 +7,10 @@ public class RestConstants {
 	public static final String IS_OTP_VERIFIED = "isOtpVerified";
 	public static final String RESPONSE_CODE = "responseCode";
 	public static final String VIEWER_INFO = "viewerInfo";
-	
+	public static final String OTP_STRING = "otpString";
+	public static final String STATUS_CODE = "statusCode";
+	public static final String DATA = "data";
+	public static final String MOBILE_NUMBER = "mobileNumber";
+	public static final String DEVICE_NUMBER = "deviceNumber";
 	
 }

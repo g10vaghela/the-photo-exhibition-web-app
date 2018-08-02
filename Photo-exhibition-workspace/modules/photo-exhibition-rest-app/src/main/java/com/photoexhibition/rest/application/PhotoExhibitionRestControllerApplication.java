@@ -17,12 +17,15 @@ import javax.ws.rs.core.Response;
 import org.osgi.service.component.annotations.Component;
 import org.springframework.http.HttpStatus;
 
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.photoexhibition.rest.constant.RestConstants;
 import com.photoexhibition.rest.util.ContestUtil;
+import com.photoexhibition.rest.util.OtpHandler;
 import com.photoexhibition.rest.util.ViewerLoginHandler;
 
 /**
@@ -78,14 +81,14 @@ public class PhotoExhibitionRestControllerApplication extends Application {
 	public Response isContestOpen() {
 		//System.out.println("PhotoExhibitionRestControllerApplication.isContestOpen1()");
 		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
-		responseJsonObject.put("statusCode", HttpStatus.OK.value());
-		responseJsonObject.put("data", ContestUtil.checkContestOpen());
+		responseJsonObject.put(RestConstants.STATUS_CODE, HttpStatus.OK.value());
+		responseJsonObject.put(RestConstants.DATA, ContestUtil.checkContestOpen());
 		return Response.status(HttpStatus.OK.value()).entity(responseJsonObject.toString()).build();
 	}
 	
 	@GET
 	@Path("/userlogin")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)	
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response userLogin(@QueryParam("userInfo") String userInfo) {
 		System.out.println("PhotoExhibitionRestControllerApplication.userLogin()");
@@ -93,16 +96,40 @@ public class PhotoExhibitionRestControllerApplication extends Application {
 		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
 		try {
 			JSONObject userInfoJsonObject = (JSONObject)JSONFactoryUtil.createJSONObject(userInfo);
-			String mobileNumber = userInfoJsonObject.getString("mobileNumber");
-			String deviceNumber = userInfoJsonObject.getString("deviceNumber");
+			String mobileNumber = userInfoJsonObject.getString(RestConstants.MOBILE_NUMBER);
+			String deviceNumber = userInfoJsonObject.getString(RestConstants.DEVICE_NUMBER);
 			log.info("Mobile Number ::" + mobileNumber);
 			log.info("deviceNumber ::" + deviceNumber);
-			responseJsonObject.put("statusCode", HttpStatus.OK.value());
-			responseJsonObject.put("data", ViewerLoginHandler.handleViewerLogin(mobileNumber, deviceNumber));
+			responseJsonObject.put(RestConstants.STATUS_CODE, HttpStatus.OK.value());
+			responseJsonObject.put(RestConstants.DATA, ViewerLoginHandler.handleViewerLogin(mobileNumber, deviceNumber));
 		} catch (JSONException e) {
 			log.error("error :: "+e);
 			e.printStackTrace();
 		}
+		return Response.status(HttpStatus.OK.value()).entity(responseJsonObject.toString()).build();
+	}
+	
+	@GET
+	@Path("/verifyotp")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response verifyOtp(@QueryParam("userInfo") String userInfo){
+		log.debug("START :: PhotoExhibitionRestControllerApplication.verifyOtp()");
+		log.debug("userInfo :"+userInfo);
+		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
+		try {
+			JSONObject viewerInfoJsonObject = (JSONObject)JSONFactoryUtil.createJSONObject(userInfo);
+			long viewerId = viewerInfoJsonObject.getLong(RestConstants.VIEWER_ID);
+			String otpString = viewerInfoJsonObject.getString(RestConstants.OTP_STRING);
+			log.info("Viewer Id :"+viewerId);
+			log.info("otpString :"+otpString);
+			responseJsonObject.put(RestConstants.STATUS_CODE, HttpStatus.OK.value());
+			responseJsonObject.put(RestConstants.DATA, OtpHandler.verifyOtp(viewerId, otpString));
+		} catch (Exception e) {
+			log.error("Error ::"+e);
+			e.printStackTrace();
+		}
+		log.debug("END :: PhotoExhibitionRestControllerApplication.verifyOtp()");
 		return Response.status(HttpStatus.OK.value()).entity(responseJsonObject.toString()).build();
 	}
 }
