@@ -5,34 +5,39 @@ import com.photoexhibition.service.dao.ViewerInfoDao;
 import com.photoexhibition.service.model.ViewerInfo;
 
 public class ViewerInfoServiceImpl implements ViewerInfoService{
-	private ViewerInfoDao viewerinfoDao;
-
-	public void setViewerinfoDao(ViewerInfoDao viewerinfoDao) {
-		this.viewerinfoDao = viewerinfoDao;
+	private ViewerInfoDao viewerInfoDao;
+	
+	public void setViewerInfoDao(ViewerInfoDao viewerInfoDao) {
+		this.viewerInfoDao = viewerInfoDao;
 	}
 
 	@Override
 	public void saveOrUpdate(ViewerInfo viewerInfo) {
-		viewerinfoDao.saveOrUpdate(viewerInfo);
+		viewerInfoDao.saveOrUpdate(viewerInfo);
 	}
 
 	@Override
 	public ViewerInfo getViewerInfoById(long viewerId) {
-		return viewerinfoDao.getViewerInfoById(viewerId);
+		return viewerInfoDao.getViewerInfoById(viewerId);
 	}
 
 	@Override
 	public ViewerInfo getViewerInfoByMobileNumber(String mobileNumber) {
-		return viewerinfoDao.getViewerInfoByMobileNumber(mobileNumber);
+		return viewerInfoDao.getViewerInfoByMobileNumber(mobileNumber);
 	}
 
 	@Override
 	public ViewerInfo getViewerInfoByDeviceNumber(String deviceNumber) {
-		return viewerinfoDao.getViewerInfoByDeviceNumber(deviceNumber);
+		return viewerInfoDao.getViewerInfoByDeviceNumber(deviceNumber);
 	}
 
 	@Override
 	public ViewerInfo getViewerInfoByMobileAndDeviceNumber(String mobileNumber, String deviceNumber) {
-		return viewerinfoDao.getViewerInfoByMobileAndDeviceNumber(mobileNumber, deviceNumber);
+		return viewerInfoDao.getViewerInfoByMobileAndDeviceNumber(mobileNumber, deviceNumber);
+	}
+
+	@Override
+	public ViewerInfo save(ViewerInfo viewerInfo) {
+		return viewerInfoDao.save(viewerInfo);		
 	}
 }

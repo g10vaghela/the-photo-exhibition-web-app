@@ -15,7 +15,39 @@ public class GeneralConfigurationUtil {
 		return generalConfigurationService;
 	}
 	
+	/**
+	 * Check contest is open or not
+	 * @return
+	 */
 	public static GeneralConfigurationInfo isContestOpenConfiguration() {
 		return getGeneralConfigurationService().getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_CONTENST_OPEN);
+	}
+	
+	/**
+	 * Checking configuration for otp service on or not
+	 * @return
+	 */
+	public static GeneralConfigurationInfo isOtpServiceOn() {
+		return getGeneralConfigurationService().getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_OTP_SERVICE_ON);
+	}
+	
+	/**
+	 * getting otp string length
+	 * @return
+	 */
+	public static int getOtpStingLength() {
+		return Integer.parseInt(getGeneralConfigurationService().getGeneralCongfigurationByKey(GeneralConfigurationConstants.OTP_STRING_LENGTH).getValue());
+	}
+	
+	public static String getOtpSendMessage() {
+		return getGeneralConfigurationService().getGeneralCongfigurationByKey(GeneralConfigurationConstants.OTP_SENT_SUCCESSFULLY_MSG).getMessage();
+	}
+	
+	public static String getProbleInOtpSendingMessage() {
+		return getGeneralConfigurationService().getGeneralCongfigurationByKey(GeneralConfigurationConstants.PROBLEM_IN_OTP_SENDING_MSG).getMessage();
+	}
+	
+	public static String getErrorMessageForViewerMobileDevice(String errorMessageKey) {
+		return getGeneralConfigurationService().getGeneralCongfigurationByKey(errorMessageKey).getMessage();
 	}
 }

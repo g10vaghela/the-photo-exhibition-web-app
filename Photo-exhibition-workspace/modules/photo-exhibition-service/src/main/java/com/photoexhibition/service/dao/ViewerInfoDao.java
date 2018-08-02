@@ -13,6 +13,30 @@ import com.photoexhibition.service.model.ViewerInfo;
 public class ViewerInfoDao extends BaseDao{
 	private static final Log log = LogFactoryUtil.getLog(ViewerInfoDao.class);
 
+	
+	/**
+	 * Save viewer info
+	 * @param viewerInfo
+	 */
+	public ViewerInfo save(ViewerInfo viewerInfo){
+		log.debug("START :: ViewerInfoDao.save()");
+		Session session = getSession();
+		Transaction transaction = session.getTransaction();
+		try {
+			transaction.begin();
+			long viewerId = (long) session.save(viewerInfo);
+			session.get(ViewerInfo.class, viewerId);
+			transaction.commit();
+		} catch(Exception e){
+			log.error("Error :: "+e);
+			transaction.rollback();
+		} finally {
+			closeSession(session);
+		}		
+		log.debug("END :: ViewerInfoDao.save()");
+		return viewerInfo;
+	}
+	
 	/**
 	 * Save or update viewer info
 	 * @param viewerInfo

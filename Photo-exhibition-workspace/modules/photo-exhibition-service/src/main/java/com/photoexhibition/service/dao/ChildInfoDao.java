@@ -1,6 +1,8 @@
 package com.photoexhibition.service.dao;
 
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -49,6 +51,25 @@ public class ChildInfoDao extends BaseDao{
 		}
 		log.debug("END :: ChildInfoDao.getChildInfoByChildRank()");
 		return childInfo;
+	}
+	
+	public List<ChildInfo> getChildInfoList(){
+		log.debug("START :: ChildInfoDao.getChildInfoList()");
+		List<ChildInfo> childInfoList = null;
+		Session session = getSession();
+		Transaction transaction = session.getTransaction();
+		try {
+			transaction.begin();
+			childInfoList = session.createQuery("from ChildInfo where status =:status").setParameter("status", true).list();
+			transaction.commit();
+		} catch (Exception e) {
+			log.error("Error ::"+e);
+			transaction.rollback();
+		} finally {
+			closeSession(session);
+		}
+		log.debug("END :: ChildInfoDao.getChildInfoList()");
+		return childInfoList;
 	}
 }
 

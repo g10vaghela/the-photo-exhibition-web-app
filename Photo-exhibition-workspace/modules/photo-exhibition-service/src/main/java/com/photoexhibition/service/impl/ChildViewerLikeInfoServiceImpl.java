@@ -32,4 +32,9 @@ public class ChildViewerLikeInfoServiceImpl implements ChildViewerLikeInfoServic
 	public List<ChildViewerLikeInfo> getChildViewerLikeInfoListByViewerId(long viewerId) {
 		return childViewerLikeInfoDao.getChildViewerLikeInfoListByViewerId(viewerId);
 	}
+
+	@Override
+	public ChildViewerLikeInfo getChildViewerLikeInfoByChildAndViewerId(long childId, long viewerId) {
+		return childViewerLikeInfoDao.getChildViewerLikeInfoByChildAndViewerId(childId, viewerId);
+	}
 }

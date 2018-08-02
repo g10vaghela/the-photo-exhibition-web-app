@@ -9,4 +9,5 @@ public interface ChildViewerLikeInfoService {
 	public ChildViewerLikeInfo getChildVieweLikeInfoById(long childViewerLikeId);
 	public List<ChildViewerLikeInfo> getChildViewerLikeInfoListByChildId(long childId);
 	public List<ChildViewerLikeInfo> getChildViewerLikeInfoListByViewerId(long viewerId);
+	public ChildViewerLikeInfo getChildViewerLikeInfoByChildAndViewerId(long childId, long viewerId);
 }

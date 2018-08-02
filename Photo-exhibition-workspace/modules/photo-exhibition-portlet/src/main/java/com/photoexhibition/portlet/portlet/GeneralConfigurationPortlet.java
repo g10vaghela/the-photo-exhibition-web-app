@@ -25,6 +25,7 @@ import com.photoexhibition.service.GeneralConfigurationService;
 import com.photoexhibition.service.constant.GeneralConfigurationConstants;
 import com.photoexhibition.service.model.GeneralConfigurationInfo;
 import com.photoexhibition.service.util.BeanLocalServiceUtil;
+import com.photoexhibition.service.util.GeneralConfigurationUtil;
 
 @Component(
 		immediate = true,
@@ -47,8 +48,10 @@ public class GeneralConfigurationPortlet extends MVCPortlet {
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
-		GeneralConfigurationInfo contestConfigurationInfo= generalConfigurationService.getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_CONTENST_OPEN);
-		GeneralConfigurationInfo otpConfigurationInfo= generalConfigurationService.getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_OTP_SERVICE_ON);				
+		//GeneralConfigurationInfo contestConfigurationInfo= generalConfigurationService.getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_CONTENST_OPEN);
+		GeneralConfigurationInfo contestConfigurationInfo= GeneralConfigurationUtil.isContestOpenConfiguration();
+		//GeneralConfigurationInfo otpConfigurationInfo= generalConfigurationService.getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_OTP_SERVICE_ON);				
+		GeneralConfigurationInfo otpConfigurationInfo= GeneralConfigurationUtil.isOtpServiceOn();
 		renderRequest.setAttribute("contestConfigurationInfo", contestConfigurationInfo);
 		renderRequest.setAttribute("otpConfigurationInfo", otpConfigurationInfo);
 		super.render(renderRequest, renderResponse);

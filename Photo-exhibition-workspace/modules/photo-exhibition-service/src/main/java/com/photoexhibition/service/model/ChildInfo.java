@@ -8,13 +8,18 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.springframework.http.StreamingHttpOutputMessage;
+
+import com.liferay.portal.kernel.util.StringPool;
+
 @Entity
 @Table(name="child_")
 public class ChildInfo {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "child_info_seq")
+	/*@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "child_info_seq")
 	@SequenceGenerator(name = "child_info_seq",  sequenceName = "child_info_seq",allocationSize=1, initialValue = 1)
-	@Column(name = "child_id")
+	@Column(name = "child_id")*/
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long childId;
 	
 	@Column(name="first_name")
@@ -29,12 +34,23 @@ public class ChildInfo {
 	@Column(name="contact_no")
 	private String contactNo;
 	
-	@Column(name="dl_file_id")
-	private long dlFileId;
+	@Column(name="photo_url")
+	private long photoUrl;
 	
 	@Column(name="rank")
 	private long childRank;
+	
+	@Column(name="status")
+	private boolean status;
 
+	public long getPhotoUrl() {
+		return photoUrl;
+	}
+
+	public void setPhotoUrl(long photoUrl) {
+		this.photoUrl = photoUrl;
+	}
+	
 	public long getChildId() {
 		return childId;
 	}
@@ -75,14 +91,6 @@ public class ChildInfo {
 		this.contactNo = contactNo;
 	}
 
-	public long getDlFileId() {
-		return dlFileId;
-	}
-
-	public void setDlFileId(long dlFileId) {
-		this.dlFileId = dlFileId;
-	}
-
 	public long getChildRank() {
 		return childRank;
 	}
@@ -91,10 +99,28 @@ public class ChildInfo {
 		this.childRank = childRank;
 	}
 
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+	
+	public String getFullName() {
+		StringBuilder fullName = new StringBuilder();
+		fullName.append(firstName);
+		fullName.append(StringPool.SPACE);
+		fullName.append(middleName);
+		fullName.append(StringPool.SPACE);
+		fullName.append(lastName);
+		return fullName.toString();
+	}
+
 	@Override
 	public String toString() {
 		return "ChildInfo [childId=" + childId + ", firstName=" + firstName + ", middleName=" + middleName
-				+ ", lastName=" + lastName + ", contactNo=" + contactNo + ", dlFileId=" + dlFileId + ", childRank="
-				+ childRank + "]";
+				+ ", lastName=" + lastName + ", contactNo=" + contactNo + ", photoUrl=" + photoUrl + ", childRank="
+				+ childRank + ", status=" + status + "]";
 	}
 }

@@ -113,4 +113,28 @@ public class ChildViewerLikeInfoDao extends BaseDao{
 		log.debug("END :: ChildViewerLikeInfoDao.getChildViewerLikeInfoByChildId()");
 		return childViewerLikeInfoList;
 	}
+	
+	public ChildViewerLikeInfo getChildViewerLikeInfoByChildAndViewerId(long childId, long viewerId) {
+		log.debug("START :: ChildViewerLikeInfoDao.getChildViewerLikeInfoByChildAndViewerId()");
+		ChildViewerLikeInfo childViewerLikeInfo = null;
+		Session session = getSession();
+		Transaction transaction = session.getTransaction();
+		
+		try {
+			String queryString = "from ChildViewerLikeInfo where childInfo.childId =:childId and viewerInfo.viewerId =:viewerId";
+			transaction.begin();
+			Query query = session.createQuery(queryString);
+			query.setParameter("childId", childId);
+			query.setParameter("viewerId", viewerId);
+			childViewerLikeInfo = (ChildViewerLikeInfo) query.uniqueResult();
+			transaction.commit();
+		} catch (Exception e) {
+			log.error("Error:: "+e);
+			transaction.rollback();
+		} finally {
+			closeSession(session);
+		}
+		log.debug("END :: ChildViewerLikeInfoDao.getChildViewerLikeInfoByChildAndViewerId()");
+		return childViewerLikeInfo;
+	}
 }

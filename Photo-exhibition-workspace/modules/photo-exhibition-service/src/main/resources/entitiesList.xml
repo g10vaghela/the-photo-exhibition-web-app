@@ -16,5 +16,6 @@
 		<value>com.photoexhibition.service.model.ChildInfo</value>
 		<value>com.photoexhibition.service.model.ViewerInfo</value>
 		<value>com.photoexhibition.service.model.ChildViewerLikeInfo</value>
+		<value>com.photoexhibition.service.model.AdvertiseInfo</value>
 	</util:list>
 </beans>

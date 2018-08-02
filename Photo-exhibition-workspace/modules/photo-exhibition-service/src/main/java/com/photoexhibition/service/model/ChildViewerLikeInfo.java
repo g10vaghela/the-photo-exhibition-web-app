@@ -14,9 +14,10 @@ import javax.persistence.Table;
 @Table(name="child_view_like")
 public class ChildViewerLikeInfo {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "child_viewer_like_info_seq")
+	/*@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "child_viewer_like_info_seq")
 	@SequenceGenerator(name = "child_viewer_like_info_seq",  sequenceName = "child_viewer_like_info_seq",allocationSize=1, initialValue = 1)
-	@Column(name = "id")
+	@Column(name = "id")*/
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long likeId;
 
 	@ManyToOne

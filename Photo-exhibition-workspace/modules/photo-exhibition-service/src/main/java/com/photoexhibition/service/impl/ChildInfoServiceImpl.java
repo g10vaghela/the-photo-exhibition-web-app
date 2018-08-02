@@ -1,5 +1,7 @@
 package com.photoexhibition.service.impl;
 
+import java.util.List;
+
 import com.photoexhibition.service.ChildInfoService;
 import com.photoexhibition.service.dao.ChildInfoDao;
 import com.photoexhibition.service.model.ChildInfo;
@@ -19,6 +21,11 @@ public class ChildInfoServiceImpl implements ChildInfoService{
 	@Override
 	public ChildInfo getChildInfoByChildRank(long childRank) {
 		return childInfoDao.getChildInfoByChildRank(childRank);
+	}
+
+	@Override
+	public List<ChildInfo> getChildInfoList() {
+		return childInfoDao.getChildInfoList();
 	}
 
 }

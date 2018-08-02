@@ -12,9 +12,10 @@ import javax.persistence.Table;
 @Table(name="viewer_")
 public class ViewerInfo {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "viewer_info_seq")
+	/*@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "viewer_info_seq")
 	@SequenceGenerator(name = "viewer_info_seq",  sequenceName = "viewer_info_seq",allocationSize=1, initialValue = 1)
-	@Column(name = "viewer_id")
+	@Column(name = "viewer_id")*/
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long viewerId;
 	
 	@Column(name="mobile_number")

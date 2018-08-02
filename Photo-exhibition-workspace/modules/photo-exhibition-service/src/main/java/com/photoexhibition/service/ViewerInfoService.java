@@ -3,6 +3,7 @@ package com.photoexhibition.service;
 import com.photoexhibition.service.model.ViewerInfo;
 
 public interface ViewerInfoService {
+	public ViewerInfo save(ViewerInfo viewerInfo);
 	public void saveOrUpdate(ViewerInfo viewerInfo);
 	public ViewerInfo getViewerInfoById(long viewerId);
 	public ViewerInfo getViewerInfoByMobileNumber(String mobileNumber);

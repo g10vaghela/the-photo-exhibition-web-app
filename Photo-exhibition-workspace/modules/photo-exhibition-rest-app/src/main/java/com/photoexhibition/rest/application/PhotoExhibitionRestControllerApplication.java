@@ -13,15 +13,17 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.osgi.service.component.annotations.Component;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
+import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.photoexhibition.rest.util.ContestUtil;
+import com.photoexhibition.rest.util.ViewerLoginHandler;
 
 /**
  * @author jiten
@@ -29,7 +31,7 @@ import com.photoexhibition.rest.util.ContestUtil;
 @ApplicationPath("/contest")
 @Component(immediate = true, service = Application.class)
 public class PhotoExhibitionRestControllerApplication extends Application {
-
+	private static final Log log = LogFactoryUtil.getLog(PhotoExhibitionRestControllerApplication.class);
 	public Set<Object> getSingletons() {
 		return Collections.<Object>singleton(this);
 	}
@@ -72,12 +74,35 @@ public class PhotoExhibitionRestControllerApplication extends Application {
 
 	@GET
 	@Path("/iscontestopen")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response isContestOpen() {
 		//System.out.println("PhotoExhibitionRestControllerApplication.isContestOpen1()");
 		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
 		responseJsonObject.put("statusCode", HttpStatus.OK.value());
 		responseJsonObject.put("data", ContestUtil.checkContestOpen());
+		return Response.status(HttpStatus.OK.value()).entity(responseJsonObject.toString()).build();
+	}
+	
+	@GET
+	@Path("/userlogin")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response userLogin(@QueryParam("userInfo") String userInfo) {
+		System.out.println("PhotoExhibitionRestControllerApplication.userLogin()");
+		log.debug("userInfo :: "+userInfo);
+		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
+		try {
+			JSONObject userInfoJsonObject = (JSONObject)JSONFactoryUtil.createJSONObject(userInfo);
+			String mobileNumber = userInfoJsonObject.getString("mobileNumber");
+			String deviceNumber = userInfoJsonObject.getString("deviceNumber");
+			log.info("Mobile Number ::" + mobileNumber);
+			log.info("deviceNumber ::" + deviceNumber);
+			responseJsonObject.put("statusCode", HttpStatus.OK.value());
+			responseJsonObject.put("data", ViewerLoginHandler.handleViewerLogin(mobileNumber, deviceNumber));
+		} catch (JSONException e) {
+			log.error("error :: "+e);
+			e.printStackTrace();
+		}
 		return Response.status(HttpStatus.OK.value()).entity(responseJsonObject.toString()).build();
 	}
 }
