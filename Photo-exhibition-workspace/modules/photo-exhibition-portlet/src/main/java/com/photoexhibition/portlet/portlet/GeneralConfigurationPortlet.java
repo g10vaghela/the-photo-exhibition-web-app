@@ -31,6 +31,7 @@ import com.photoexhibition.service.util.BeanLocalServiceUtil;
 		property = {
 			"com.liferay.portlet.display-category=Photo-Exhibition",
 			"com.liferay.portlet.instanceable=true",
+			"add-process-action-success-action=false",
 			"javax.portlet.display-name=General Configuration Portlet",
 			"javax.portlet.init-param.template-path=/",
 			"javax.portlet.init-param.view-template=/general-configuration/generalConfig.jsp",
@@ -46,41 +47,58 @@ public class GeneralConfigurationPortlet extends MVCPortlet {
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
-		GeneralConfigurationInfo generalConfigurationInfo= generalConfigurationService.getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_CONTENST_OPEN);
-		if(Validator.isNotNull(generalConfigurationInfo)){
-			renderRequest.setAttribute(GeneralConfigurationConstants.IS_CONTENST_OPEN, generalConfigurationInfo);
-		} else {
-			renderRequest.setAttribute(GeneralConfigurationConstants.IS_CONTENST_OPEN, null);
-		}
+		GeneralConfigurationInfo contestConfigurationInfo= generalConfigurationService.getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_CONTENST_OPEN);
+		GeneralConfigurationInfo otpConfigurationInfo= generalConfigurationService.getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_OTP_SERVICE_ON);				
+		renderRequest.setAttribute("contestConfigurationInfo", contestConfigurationInfo);
+		renderRequest.setAttribute("otpConfigurationInfo", otpConfigurationInfo);
 		super.render(renderRequest, renderResponse);
 	}
 	
-	@ProcessAction(name="addOrUpdateConfiguration")
-	public void addOrUpdateConfiguration(ActionRequest actionRequest, ActionResponse actionResponse) {
-		log.debug("START :: GeneralConfigurationPortlet.addOrUpdateConfiguration()");
-		String configKey = actionRequest.getParameter("configKey");
-		String configValue = actionRequest.getParameter("configValue");
+	@ProcessAction(name="updateContestConfig")
+	public void updateContestConfig(ActionRequest actionRequest, ActionResponse actionResponse) {
+		log.info("START :: GeneralConfigurationPortlet.updateContestConfig()");
+		String configKey = actionRequest.getParameter("contest-switch");
 		String configMessage = actionRequest.getParameter("configMessage");
-		log.debug("configKey :: "+configKey);
-		log.debug("configValue :: "+configValue);
-		log.debug("configMessage :: "+configMessage);
+		log.info("contest-switch :: "+configKey);
+		log.info("configMessage :: "+configMessage);
 		try {
-			if(Validator.isNotNull(configKey) && Validator.isNotNull(configValue)) {
-				GeneralConfigurationInfo generalConfigurationInfo = new GeneralConfigurationInfo();
-				generalConfigurationInfo.setKey(configKey);
-				generalConfigurationInfo.setValue(configValue);
-				generalConfigurationInfo.setMessage(configMessage);
-				generalConfigurationService.saveOrUpdate(generalConfigurationInfo);
-				log.debug("generalConfigurationInfo ::"+generalConfigurationInfo+" Saved Successfully...!!!");
-				SessionMessages.add(actionRequest,MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_SUCCESS_MESSAGE);
+			GeneralConfigurationInfo generalConfigurationInfo = new GeneralConfigurationInfo();
+			generalConfigurationInfo.setKey(GeneralConfigurationConstants.IS_CONTENST_OPEN);
+			if(Validator.isNotNull(configKey)) {
+				generalConfigurationInfo.setValue("true");
+				generalConfigurationInfo.setMessage(null);
 			} else {
-				log.error("Configuration key or value can not be null");
-				SessionErrors.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_ERROR_MESSAGE);
+				generalConfigurationInfo.setValue("false");
+				generalConfigurationInfo.setMessage(configMessage);
 			}
+			generalConfigurationService.saveOrUpdate(generalConfigurationInfo);
+			SessionMessages.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_SUCCESS_MESSAGE);
 		} catch (Exception e) {
 			log.error("Error ::"+e);
 			SessionErrors.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_ERROR_MESSAGE);
 		}
-		log.debug("END :: GeneralConfigurationPortlet.addOrUpdateConfiguration()");
+		log.info("END :: GeneralConfigurationPortlet.updateContestConfig()");
+	}
+	
+	@ProcessAction(name="updateOtpConfig")
+	public void updateOtpConfig(ActionRequest actionRequest, ActionResponse actionResponse) {
+		log.info("START :: GeneralConfigurationPortlet.updateOtpConfig()");
+		String otpSwitch = actionRequest.getParameter("otp-switch");
+		log.info("otpSwitch :: "+otpSwitch);
+		try {
+			GeneralConfigurationInfo generalConfigurationInfo = new GeneralConfigurationInfo();
+			generalConfigurationInfo.setKey(GeneralConfigurationConstants.IS_OTP_SERVICE_ON);
+			if(Validator.isNotNull(otpSwitch)) {
+				generalConfigurationInfo.setValue("true");
+			} else {
+				generalConfigurationInfo.setValue("false");
+			}
+			generalConfigurationService.saveOrUpdate(generalConfigurationInfo);
+			SessionMessages.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_SUCCESS_MESSAGE);
+		} catch (Exception e) {
+			log.error("Error ::"+e);
+			SessionErrors.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_ERROR_MESSAGE);
+		}
+		log.info("END :: GeneralConfigurationPortlet.updateOtpConfig()");
 	}
 }

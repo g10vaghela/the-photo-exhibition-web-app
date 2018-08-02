@@ -1,5 +1,6 @@
 package com.photoexhibition.rest.util;
 
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
@@ -14,12 +15,11 @@ import com.photoexhibition.service.util.BeanLocalServiceUtil;
 public class ContestUtil {
 	private static final Log log = LogFactoryUtil.getLog(ContestUtil.class);
 	private static GeneralConfigurationService generalConfigurationService = BeanLocalServiceUtil.getGeneralConfigurationService();
-	public static String checkContestOpen() {
+	public static JSONArray checkContestOpen() {
 		log.debug("START :: ContestUtil.checkContestOpen()");
-		String jsonString = null;
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 		try {
 			GeneralConfigurationInfo generalConfigurationInfo = generalConfigurationService.getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_CONTENST_OPEN);
-
 			if(Validator.isNotNull(generalConfigurationInfo)) {
 				boolean isContestOpen = Boolean.parseBoolean(generalConfigurationInfo.getValue());
 				log.debug("isContestOpen ::"+isContestOpen);
@@ -30,7 +30,7 @@ public class ContestUtil {
 				} else {
 					contestJsonObject.put(RestConstants.MESSAGE, generalConfigurationInfo.getMessage());
 				}
-				jsonString =contestJsonObject.toString(); 
+				jsonArray.put(contestJsonObject); 
 			} else {
 				log.error("Null Generel config found");
 			}
@@ -38,10 +38,9 @@ public class ContestUtil {
 			log.error(e);
 			JSONObject errorJson = JSONFactoryUtil.createJSONObject();
 			errorJson.put("error", e);
-			jsonString = errorJson.toString();
+			jsonArray.put(errorJson);
 		}
-		log.debug("Response :: "+jsonString);
 		log.debug("END :: ContestUtil.checkContestOpen()");
-		return jsonString;
+		return jsonArray;
 	}
 }

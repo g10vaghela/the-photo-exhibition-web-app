@@ -1,53 +1,194 @@
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletMode"%>
 <%@page import="com.liferay.portal.kernel.util.Validator"%>
-<%@page import="org.springframework.validation.annotation.Validated"%>
 <%@page import="com.photoexhibition.service.constant.GeneralConfigurationConstants"%>
 <%@page import="com.photoexhibition.service.model.GeneralConfigurationInfo"%>
 <%@include file="../init.jsp" %>
 <%@include file="../common-import.jsp" %>
 <%
-	GeneralConfigurationInfo generalConfigurationInfo = (GeneralConfigurationInfo)request.getAttribute(GeneralConfigurationConstants.IS_CONTENST_OPEN);
-	boolean isGeneralConfigFound = false;
-	if(Validator.isNotNull(generalConfigurationInfo)){
-		isGeneralConfigFound = true;
+	GeneralConfigurationInfo contestConfigurationInfo = (GeneralConfigurationInfo)request.getAttribute("contestConfigurationInfo");
+	GeneralConfigurationInfo otpConfigurationInfo = (GeneralConfigurationInfo)request.getAttribute("otpConfigurationInfo");
+	boolean isContestGeneralConfigFound = false;
+	boolean contestConfigValue = false;
+	if(Validator.isNotNull(contestConfigurationInfo)){
+		isContestGeneralConfigFound = true;
+		contestConfigValue = Boolean.parseBoolean(contestConfigurationInfo.getValue()); 
 	}
+	
+	boolean isOtpGeneralConfigFound = false;
+	boolean isOtpServiceOn = false;
+	if(Validator.isNotNull(otpConfigurationInfo)){
+		isOtpGeneralConfigFound = true;
+	}	
 %>
 <liferay-ui:success key="general-config-save-or-update-success-message" message="Configuration Saved successfully...!!!"/>
 <liferay-ui:error key="general-config-save-or-update-error-message" message="Sorry, Configuration Can not saved...!!!"/>
-
-<portlet:actionURL var="actionURL" name="addOrUpdateConfiguration" windowState="<%=LiferayWindowState.EXCLUSIVE.toString() %>"/>
-<aui:form name="general_config_form" id="general_config_form"  action="<%=actionURL.toString()%>">
+<c:set var="isContestGeneralConfigFound" value="<%=isContestGeneralConfigFound %>"></c:set>
+<c:set var="contestConfigValue" value="<%=contestConfigValue %>"></c:set>
+<portlet:actionURL var="updateContestConfigURL" name="updateContestConfig" />
+<portlet:actionURL var="updateOtpConfigURL" name="updateOtpConfig" />
+<aui:form name="general_config_form" id="general_config_form" method="POST">
 	<div class="panel-body">
-		<div class="row">
-			<div>
-			
+		<c:if test="${isContestGeneralConfigFound}">
+			<div class="row">
+				<div class="col-md-3">
+					<liferay-ui:message key="lbl.contest.open" />
+				</div>
+				<div class="col-md-2">
+					<label class="switch">
+						<c:choose>
+							<c:when test="<%=contestConfigValue %>">
+								 <input type="checkbox" checked id="<portlet:namespace />contest-switch" name="<portlet:namespace />contest-switch">
+							</c:when>
+							<c:otherwise>
+								<input type="checkbox" name="<portlet:namespace />contest-switch" id="<portlet:namespace />contest-switch">
+							</c:otherwise>
+						</c:choose>
+					  <span class="slider round"></span>
+					</label>
+				</div>
+				<div class="col-md-5">
+					<c:choose>
+						<c:when test="<%=!contestConfigValue %>">
+							<div class="message-container">
+								<aui:input name="configMessage" id="configMessage" type="text" label="lbl.general.config.message" 
+								placeholder="lbl.general.config.message.placeholder"
+								value = "${contestConfigurationInfo.message}">
+									<aui:validator name="required">
+										function() {
+								    		return !$("#<portlet:namespace />contest-switch").is(':checked');
+								    	}
+									</aui:validator>
+								</aui:input>
+							</div>
+						</c:when>
+						<c:otherwise>
+							<div class="message-container" style="display: none;">
+								<aui:input name="configMessage" id="configMessage" type="text" label="lbl.general.config.message" 
+								placeholder="lbl.general.config.message.placeholder">
+									<aui:validator name="required">
+										function() {
+								    		return $("#<portlet:namespace />contest-switch").is(':checked');
+								    	}
+									</aui:validator>
+								</aui:input>
+							</div>
+						</c:otherwise>
+					</c:choose>
+				</div>
+				<div class="col-md-2">
+			   		<button class="btn btn-primary btn-default but-small contest-update-btn" type="button" id="contest-update-btn" disabled onclick="submitForm('updateContestFlag')">
+			   			<liferay-ui:message key="lbl.update.button" />
+			   		</button>
+			   	</div>
 			</div>
-		
-			<%-- <div class="col-md-3">
-				<aui:input name="configKey" id="configKey" type="text" label="lbl.general.config.key" 
-				placeholder="lbl.general.config.key.placeholder">
-					<aui:validator name="required">
-					</aui:validator>
-				</aui:input>
-			</div>
-			<div class="col-md-3">
-				<aui:input name="configValue" id="configValue" type="text" label="lbl.general.config.value" 
-				placeholder="lbl.general.config.value.placeholder">
-					<aui:validator name="required">
-					</aui:validator>
-				</aui:input>
-			</div>
-			<div class="col-md-3">
-				<aui:input name="configMessage" id="configMessage" type="text" label="lbl.general.config.message" 
-					placeholder="lbl.general.config.message.placeholder">
-					<aui:validator name="required">
-					</aui:validator>
-				</aui:input>
-			</div>
-			<div class="col-md-3">
-		   		<button class="btn btn-primary btn-default but-small searc-policy-btn" type="Submit" value="Search">
-		   			<liferay-ui:message key="lbl.save.or.update.button" />
-		   		</button>
-		   	</div> --%>
-		</div>
+		</c:if>
+		<c:if test="<%=isOtpGeneralConfigFound %>">
+			<div class="row">
+				<div class="col-md-3">
+					<liferay-ui:message key="lbl.opt.service.start" />
+				</div>
+				<div class="col-md-7">
+					<label class="switch">
+						<c:choose>
+							<c:when test="${otpConfigurationInfo.value eq 'true'}">
+								 <input type="checkbox" checked id="<portlet:namespace />otp-switch" name="<portlet:namespace />otp-switch">
+							</c:when>
+							<c:otherwise>
+								<input type="checkbox" id="<portlet:namespace />otp-switch" name="<portlet:namespace />otp-switch">
+							</c:otherwise>
+						</c:choose>
+					  <span class="slider round"></span>
+					</label>
+				</div>
+				<div class="col-md-2">
+			   		<button class="btn btn-primary btn-default but-small otp-update-btn " id="otp-update-btn" type="button" disabled onclick="submitForm('updateOtpFlag')">
+			   			<liferay-ui:message key="lbl.update.button" />
+			   		</button>
+			   	</div>
+			</div>	
+		</c:if>
 	</div>
 </aui:form>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#<portlet:namespace />contest-switch").change(function(){
+		$('#contest-update-btn').prop('disabled',false);
+		$('#contest-update-btn').removeClass("disabled");
+		if(!this.checked){
+			$('.message-container').show(500);
+		} else {
+			$('.message-container').hide(500);			
+		}
+	});
+	$("#<portlet:namespace />otp-switch").change(function(){
+		$('#otp-update-btn').prop('disabled',false);
+		$('#otp-update-btn').removeClass("disabled");
+	});
+});
+var submitForm = function(message){
+	var submitButton = $('#<portlet:namespace />general_config_form');
+	if(message == 'updateContestFlag'){
+		submitButton.attr("action","${updateContestConfigURL}");
+	} else if(message == 'updateOtpFlag') {
+		submitButton.attr("action","${updateOtpConfigURL}");
+	}
+	$("#<portlet:namespace />general_config_form").submit();
+}
+</script>
+<style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>

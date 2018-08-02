@@ -6,16 +6,21 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.osgi.service.component.annotations.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.photoexhibition.rest.util.ContestUtil;
 
 /**
@@ -58,11 +63,21 @@ public class PhotoExhibitionRestControllerApplication extends Application {
 		return greeting;
 	}
 	
-	@POST
+/*	@GET
 	@Path("/iscontestopen")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String isContestOpen() {
-		return ContestUtil.checkContestOpen();
-	}
+	public  String isContestOpen() {
+		return ContestUtil.checkContestOpen().toJSONString();
+	}*/
 
+	@GET
+	@Path("/iscontestopen")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response isContestOpen() {
+		//System.out.println("PhotoExhibitionRestControllerApplication.isContestOpen1()");
+		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
+		responseJsonObject.put("statusCode", HttpStatus.OK.value());
+		responseJsonObject.put("data", ContestUtil.checkContestOpen());
+		return Response.status(HttpStatus.OK.value()).entity(responseJsonObject.toString()).build();
+	}
 }
