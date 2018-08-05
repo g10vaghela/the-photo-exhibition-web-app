@@ -1,26 +1,20 @@
 package com.photoexhibition.rest.util;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.List;
+import java.net.URLConnection;
 
-import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
-import com.liferay.document.library.kernel.util.DLUtil;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.photoexhibition.rest.constant.RestConstants;
-import com.photoexhibition.service.AdvertiseInfoService;
-import com.photoexhibition.service.ChildInfoService;
-import com.photoexhibition.service.ChildViewerLikeInfoService;
 import com.photoexhibition.service.ViewerInfoService;
 import com.photoexhibition.service.constant.GeneralConfigurationConstants;
-import com.photoexhibition.service.model.AdvertiseInfo;
-import com.photoexhibition.service.model.ChildInfo;
-import com.photoexhibition.service.model.ChildViewerLikeInfo;
 import com.photoexhibition.service.model.ViewerInfo;
 import com.photoexhibition.service.util.BeanLocalServiceUtil;
 import com.photoexhibition.service.util.GeneralConfigurationUtil;
@@ -31,12 +25,6 @@ public class ViewerLoginHandler {
 	private static final Log log = LogFactoryUtil.getLog(ViewerLoginHandler.class);
 
 	private static ViewerInfoService viewerInfoService = BeanLocalServiceUtil.getViewerInfoService();
-
-	private static AdvertiseInfoService advertiseInfoService = BeanLocalServiceUtil.getAdvertiseInfoService();
-
-	private static ChildInfoService childInfoService = BeanLocalServiceUtil.getChildInfoService();
-	
-	private static ChildViewerLikeInfoService childViewerLikeInfoService = BeanLocalServiceUtil.getChildViewerLikeInfoService();
 
 	public static JSONArray handleViewerLogin(String mobileNumber, String deviceNumber) {
 		log.debug("START :: ViewerLoginHandler.handleViewerLogin()");
@@ -52,7 +40,7 @@ public class ViewerLoginHandler {
 				if(viewerInfo.isOtpVerified()) {
 					log.info("Mobile number is verified for viewer");
 					//viewer is registered and mobile number is verified
-					responseJsonArray = getViewerResponseJson(viewerInfo);
+					responseJsonArray = ViewerDataHandler.getViewerResponseJson(viewerInfo);
 				} else {
 					log.info("Mobile number not verified");
 					log.info("Verification process started....");
@@ -161,50 +149,39 @@ public class ViewerLoginHandler {
 	}
 	
 	private static boolean sendOtp(ViewerInfo viewerInfo) {
-		
-		return false;
-	}
-
-	public static JSONArray getViewerResponseJson(ViewerInfo viewerInfo) {
-		//otp is verified just send child list and advertise list
-		JSONArray responseJsonArray = JSONFactoryUtil.createJSONArray();
+	/*private static boolean sendOtp(String mobileNumber, String otp) {*/
+		boolean isOtpSent = false;
 		try {
-			List<AdvertiseInfo> advertiseInfoList = advertiseInfoService.getAdvertiseInfoList();
-			List<ChildInfo> childInfoList = childInfoService.getChildInfoList();
-			JSONArray childJsonArray =  JSONFactoryUtil.createJSONArray();
-			JSONObject childJson = JSONFactoryUtil.createJSONObject();
-			JSONObject advertiseJson = JSONFactoryUtil.createJSONObject();
-			JSONObject viewerInfoJson = JSONFactoryUtil.createJSONObject();
-			for (ChildInfo childInfo : childInfoList) {
-				ChildViewerLikeInfo childViewerLikeInfo = childViewerLikeInfoService.getChildViewerLikeInfoByChildAndViewerId(childInfo.getChildId(), viewerInfo.getViewerId());
-				if(Validator.isNotNull(childViewerLikeInfo)) {
-					childJsonArray.put(getJsonByObject(childInfo, childViewerLikeInfo.isLike()));
-				} else {
-					childJsonArray.put(getJsonByObject(childInfo, false));
-				}
-			}
-			childJson.put("childData", childJsonArray);
-			advertiseJson.put("advertiseData", advertiseInfoList);
-			viewerInfoJson.put("viewerId", viewerInfo.getViewerId());
-			viewerInfoJson.put("isOtpVerified", viewerInfo.isOtpVerified());
-			viewerInfoJson.put("responseCode", LoginResponseCode.SUCCESS.getValue());
-			JSONObject viewerJsonWrapper = JSONFactoryUtil.createJSONObject();
-			viewerJsonWrapper.put("viewerInfo", viewerInfoJson);
-			responseJsonArray.put(viewerJsonWrapper);
-			responseJsonArray.put(childJson);
-			responseJsonArray.put(advertiseJson);
+			String otpUrl = "https://2factor.in/API/V1/{api_key}/SMS/+91{user's_phone_no}/{custom_otp_val}";
+			otpUrl = StringUtil.replace(otpUrl, new String[] {"{api_key}","{user's_phone_no}","{custom_otp_val}"}, 
+												new String[] {"9177b68d-798c-11e6-a584-00163ef91450",viewerInfo.getMobileNumber(),viewerInfo.getOtp()});
+			log.info("otpUrl :: "+otpUrl);
+			URLConnection myURLConnection=null;
+			URL url = new URL(otpUrl);
+			myURLConnection = url.openConnection();
+			BufferedReader reader=null;
+			myURLConnection.connect();
+			reader= new BufferedReader(new InputStreamReader(myURLConnection.getInputStream()));
+			String response;
+			while ((response = reader.readLine()) != null) {break;}
+						//{"Status":"Success","Details":"6460fcc0-9719-11e8-a895-0200cd936042"}
+			System.out.println(response);
+			/*response = StringUtil.replace(response, 
+											new String[] {"{\"","\":\"","\",\"","\"}"}, 
+											new String[] {"","|","|",""});*/
+			System.out.println(response);
+//			String[] responseArray = response.split("|");
+			JSONObject responseJson = JSONFactoryUtil.createJSONObject(response);
+			System.out.println("Response :: "+responseJson);
+			//finally close connection
+			/*isOtpSent = "Success".equalsIgnoreCase(responseArray[1]);*/
+			isOtpSent = "Success".equals(responseJson.getString("Status"));
+			System.out.println("isOtpSent  ::"+isOtpSent);
+			reader.close();
+			
 		} catch (Exception e) {
-			log.error("Error :: "+e);
+			System.out.println(e);
 		}
-		return responseJsonArray;
-	}
-	
-	public static JSONObject getJsonByObject(ChildInfo childInfo, boolean isLike) throws PortalException {
-		JSONObject childJsonObject = JSONFactoryUtil.createJSONObject();
-		childJsonObject.put("childId", childInfo.getChildId());
-		childJsonObject.put("childName", childInfo.getFullName());
-		childJsonObject.put("isLike", isLike);
-		childJsonObject.put("photoUrl", childInfo.getPhotoUrl());
-		return childJsonObject;
+		return isOtpSent;
 	}
 }

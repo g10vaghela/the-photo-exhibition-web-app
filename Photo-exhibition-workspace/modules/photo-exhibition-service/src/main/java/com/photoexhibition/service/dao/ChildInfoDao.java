@@ -31,6 +31,26 @@ public class ChildInfoDao extends BaseDao{
 		log.debug("END :: ChildInfoDao.saveOrUpdate()");
 	}
 	
+	public ChildInfo getChildInfoById(long childId) {
+		log.debug("START :: ChildInfoDao.getChildInfoById()");
+		ChildInfo childInfo = null;
+		Session session = getSession();
+		Transaction transaction = session.getTransaction();
+		try {
+			transaction.begin();
+			childInfo = (ChildInfo) session.get(ChildInfo.class, childId);
+			transaction.commit();
+		} catch (Exception e) {
+			log.error("Error ::"+e);
+			e.printStackTrace();
+			transaction.rollback();
+		} finally {
+			closeSession(session);
+		}
+		log.debug("END :: ChildInfoDao.getChildInfoById()");
+		return childInfo;
+	}
+	
 	public ChildInfo getChildInfoByChildRank(long childRank){
 		log.debug("START :: ChildInfoDao.getChildInfoByChildRank()");
 		ChildInfo childInfo = null;

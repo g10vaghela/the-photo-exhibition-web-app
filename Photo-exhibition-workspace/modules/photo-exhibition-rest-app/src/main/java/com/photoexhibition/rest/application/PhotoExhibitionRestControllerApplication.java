@@ -25,7 +25,9 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.photoexhibition.rest.constant.RestConstants;
 import com.photoexhibition.rest.util.ContestUtil;
+import com.photoexhibition.rest.util.LikeHandler;
 import com.photoexhibition.rest.util.OtpHandler;
+import com.photoexhibition.rest.util.ViewerDataHandler;
 import com.photoexhibition.rest.util.ViewerLoginHandler;
 
 /**
@@ -67,37 +69,52 @@ public class PhotoExhibitionRestControllerApplication extends Application {
 
 		return greeting;
 	}
-	
-/*	@GET
-	@Path("/iscontestopen")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public  String isContestOpen() {
-		return ContestUtil.checkContestOpen().toJSONString();
-	}*/
 
+	/**
+	 * Checking whether contest open or not
+	 * @return
+	 * Response Json strucure
+	{
+	    "data": [
+	        {
+	            "isContestOpen": true,
+	            "message": ""
+	        }
+	    ],
+	    "statusCode": 200
+	}
+	 */
 	@GET
 	@Path("/iscontestopen")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response isContestOpen() {
-		//System.out.println("PhotoExhibitionRestControllerApplication.isContestOpen1()");
 		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
 		responseJsonObject.put(RestConstants.STATUS_CODE, HttpStatus.OK.value());
 		responseJsonObject.put(RestConstants.DATA, ContestUtil.checkContestOpen());
 		return Response.status(HttpStatus.OK.value()).entity(responseJsonObject.toString()).build();
 	}
 	
+	/**
+	 * Login service for viewer
+	 * Request Json Structure
+	{
+		"mobileNumber":"1234567980",
+		"deviceNumber":"6325DDd45"
+	}
+	 * @param viewerInfo
+	 * @return
+	 */
 	@GET
-	@Path("/userlogin")
+	@Path("/viewerlogin")
 	@Produces(MediaType.APPLICATION_JSON)	
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response userLogin(@QueryParam("userInfo") String userInfo) {
-		System.out.println("PhotoExhibitionRestControllerApplication.userLogin()");
-		log.debug("userInfo :: "+userInfo);
+	public Response viewerLogin(@QueryParam("viewerInfo") String viewerInfo) {
+		log.debug("viewerInfo :: "+viewerInfo);
 		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
 		try {
-			JSONObject userInfoJsonObject = (JSONObject)JSONFactoryUtil.createJSONObject(userInfo);
-			String mobileNumber = userInfoJsonObject.getString(RestConstants.MOBILE_NUMBER);
-			String deviceNumber = userInfoJsonObject.getString(RestConstants.DEVICE_NUMBER);
+			JSONObject viewerInfoJsonObject = (JSONObject)JSONFactoryUtil.createJSONObject(viewerInfo);
+			String mobileNumber = viewerInfoJsonObject.getString(RestConstants.MOBILE_NUMBER);
+			String deviceNumber = viewerInfoJsonObject.getString(RestConstants.DEVICE_NUMBER);
 			log.info("Mobile Number ::" + mobileNumber);
 			log.info("deviceNumber ::" + deviceNumber);
 			responseJsonObject.put(RestConstants.STATUS_CODE, HttpStatus.OK.value());
@@ -109,11 +126,21 @@ public class PhotoExhibitionRestControllerApplication extends Application {
 		return Response.status(HttpStatus.OK.value()).entity(responseJsonObject.toString()).build();
 	}
 	
+	/**
+	 * Verify otp for mobile mobile authentication
+	 * Request JSON Structure
+	{
+		"viewerId":362544,
+		"otpString":"362512"
+	}
+	 * @param userInfo
+	 * @return
+	 */
 	@GET
 	@Path("/verifyotp")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response verifyOtp(@QueryParam("userInfo") String userInfo){
+	public Response verifyOtp(@QueryParam("viewerInfo") String userInfo){
 		log.debug("START :: PhotoExhibitionRestControllerApplication.verifyOtp()");
 		log.debug("userInfo :"+userInfo);
 		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
@@ -130,6 +157,72 @@ public class PhotoExhibitionRestControllerApplication extends Application {
 			e.printStackTrace();
 		}
 		log.debug("END :: PhotoExhibitionRestControllerApplication.verifyOtp()");
+		return Response.status(HttpStatus.OK.value()).entity(responseJsonObject.toString()).build();
+	}
+	
+	/**
+	 * Adding like to child photo by viewer
+	 * Request JSON Structure
+		{
+			"childId":123,
+			"viewerId":362544,
+			"isLike":true
+		}
+	 * @param likeInfo
+	 * @return
+	 */
+	@GET
+	@Path("/addlike")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addLike(@QueryParam("likeInfo") String likeInfo) {
+		log.debug("START :: PhotoExhibitionRestControllerApplication.addLike()");
+		log.debug("likeInfo ::"+likeInfo);
+		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
+		try {
+			JSONObject likeInfoJson = JSONFactoryUtil.createJSONObject(likeInfo);
+			long childId = likeInfoJson.getLong(RestConstants.CHILD_ID);
+			long viewerId = likeInfoJson.getLong(RestConstants.VIEWER_ID);
+			boolean isLiked = likeInfoJson.getBoolean(RestConstants.IS_LIKE);
+			log.info("childId ::"+childId);
+			log.info("viewerId ::"+viewerId);
+			log.info("isLiked ::"+isLiked);
+			responseJsonObject.put(RestConstants.STATUS_CODE, HttpStatus.OK.value());
+			responseJsonObject.put(RestConstants.DATA,LikeHandler.manageLike(childId, viewerId, isLiked));
+		} catch (Exception e) {
+			log.error("Error ::"+e);
+			e.printStackTrace();
+		}
+		log.debug("END :: PhotoExhibitionRestControllerApplication.addLike()");
+		return Response.status(HttpStatus.OK.value()).entity(responseJsonObject.toString()).build();
+	}
+	/**
+	 * Getting viewer data after otp verification
+	 * param JSON structure
+	 * {
+	 * 	viewerId:123
+	 * }
+	 * @param viewerInfo
+	 * @return
+	 */
+	@GET
+	@Path("/get-data-after-otp-verification")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response getDataAfterOtpVerification(@QueryParam("viewerInfo") String viewerInfo) {
+		log.debug("START :: PhotoExhibitionRestControllerApplication.getDataAfterOtpVerification()");
+		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
+		try {
+			JSONObject viewerJsonObject = JSONFactoryUtil.createJSONObject(viewerInfo);
+			long viewerId = viewerJsonObject.getLong(RestConstants.VIEWER_ID);
+			log.info("viewerId :: "+viewerId);
+			responseJsonObject.put(RestConstants.STATUS_CODE, HttpStatus.OK.value());
+			responseJsonObject.put(RestConstants.DATA, ViewerDataHandler.getViewerData(viewerId));	
+		} catch (Exception e) {
+			log.error("Error ::"+e);
+			e.printStackTrace();
+		}
+		log.debug("END :: PhotoExhibitionRestControllerApplication.getDataAfterOtpVerification()");
 		return Response.status(HttpStatus.OK.value()).entity(responseJsonObject.toString()).build();
 	}
 }

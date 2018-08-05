@@ -50,4 +50,8 @@ public class GeneralConfigurationUtil {
 	public static String getErrorMessageForViewerMobileDevice(String errorMessageKey) {
 		return getGeneralConfigurationService().getGeneralCongfigurationByKey(errorMessageKey).getMessage();
 	}
+	
+	public static GeneralConfigurationInfo checkLikeServiceOpen() {
+		return getGeneralConfigurationService().getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_LIKE_SERVICE_OPEN);
+	}
 }

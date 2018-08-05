@@ -1,7 +1,3 @@
-<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletMode"%>
-<%@page import="com.liferay.portal.kernel.util.Validator"%>
-<%@page import="com.photoexhibition.service.constant.GeneralConfigurationConstants"%>
-<%@page import="com.photoexhibition.service.model.GeneralConfigurationInfo"%>
 <%@include file="../init.jsp" %>
 <%@include file="../common-import.jsp" %>
 <%

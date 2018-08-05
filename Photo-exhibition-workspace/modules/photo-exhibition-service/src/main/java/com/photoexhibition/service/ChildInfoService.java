@@ -7,5 +7,6 @@ import com.photoexhibition.service.model.ChildInfo;
 public interface ChildInfoService {
 	public void saveOrUpdate(ChildInfo childInfo);
 	public ChildInfo getChildInfoByChildRank(long childRank);
+	public ChildInfo getChildInfoById(long childId);
 	public List<ChildInfo> getChildInfoList();
 }

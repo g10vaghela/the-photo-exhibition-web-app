@@ -28,4 +28,9 @@ public class ChildInfoServiceImpl implements ChildInfoService{
 		return childInfoDao.getChildInfoList();
 	}
 
+	@Override
+	public ChildInfo getChildInfoById(long childId) {
+		return childInfoDao.getChildInfoById(childId);
+	}
+
 }

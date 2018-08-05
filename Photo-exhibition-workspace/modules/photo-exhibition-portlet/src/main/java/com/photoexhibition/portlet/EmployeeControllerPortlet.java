@@ -1,4 +1,4 @@
-package com.photoexhibition.portlet.portlet;
+package com.photoexhibition.portlet;
 
 import java.io.IOException;
 

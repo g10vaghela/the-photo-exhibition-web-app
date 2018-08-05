@@ -1,14 +1,13 @@
 package com.photoexhibition.service.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.springframework.http.StreamingHttpOutputMessage;
 
 import com.liferay.portal.kernel.util.StringPool;
 
@@ -42,6 +41,9 @@ public class ChildInfo {
 	
 	@Column(name="status")
 	private boolean status;
+	
+	@Column(name="date_of_birth", nullable = true)
+	private Date dateOfBirth;
 
 	public long getPhotoUrl() {
 		return photoUrl;
@@ -117,10 +119,18 @@ public class ChildInfo {
 		return fullName.toString();
 	}
 
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
 	@Override
 	public String toString() {
 		return "ChildInfo [childId=" + childId + ", firstName=" + firstName + ", middleName=" + middleName
 				+ ", lastName=" + lastName + ", contactNo=" + contactNo + ", photoUrl=" + photoUrl + ", childRank="
-				+ childRank + ", status=" + status + "]";
+				+ childRank + ", status=" + status + ", dateOfBirth=" + dateOfBirth + "]";
 	}
 }

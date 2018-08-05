@@ -5,6 +5,7 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.photoexhibition.rest.constant.RestConstants;
 import com.photoexhibition.service.ViewerInfoService;
 import com.photoexhibition.service.model.ViewerInfo;
@@ -26,6 +27,7 @@ public class OtpHandler {
 			JSONObject jsonObjectWrapper = JSONFactoryUtil.createJSONObject();
 			if(viewerInfo.getOtp().equalsIgnoreCase(otpString)){
 				viewerInfo.setOtpVerified(true);
+				viewerInfo.setOtp(StringPool.BLANK);
 				viewerInfoService.saveOrUpdate(viewerInfo);
 				jsonObject.put(RestConstants.VIEWER_ID, viewerId);
 				jsonObject.put(RestConstants.IS_OTP_VERIFIED, true);
