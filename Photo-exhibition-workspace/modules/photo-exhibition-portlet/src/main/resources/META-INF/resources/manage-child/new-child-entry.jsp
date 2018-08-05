@@ -24,6 +24,12 @@
 		<div style="border-bottom: 2px solid gray;">
 		     <input type="date" name="<portlet:namespace/>dateOfBirth" style="border: 0px;">
 		</div>
+		<div>
+			<label class="switch">
+				<input checked type="checkbox" name="<portlet:namespace />isChildActive" id="<portlet:namespace />isChildActive">
+				<span class="slider round"></span>
+			</label>
+		</div>
 	</div>
 	<div class="col-md-8">
 	</div>

@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.photoexhibition.portlet.constants.ControllerPortletKeys;
+import com.photoexhibition.portlet.validator.ChildInfoValidator;
 import com.photoexhibition.service.model.ChildInfo;
 
 @Component(
@@ -64,6 +65,8 @@ public class ManageChildPortlet extends MVCPortlet{
 	public void openAddNewChildWindow(ActionRequest actionRequest, ActionResponse actionResponse) {
 		log.debug("START :: ManageChildPortlet.openAddNewChildWindow()");
 		actionRequest.setAttribute("isNewChild", true);
+		actionRequest.setAttribute("isChildInfoEditable", false);
+		actionRequest.setAttribute("isChildInfoView", false);
 		actionResponse.setRenderParameter("mvcPath", "/manage-child/child-info-page.jsp");
 		log.debug("END :: ManageChildPortlet.openAddNewChildWindow()");
 	}
@@ -71,7 +74,22 @@ public class ManageChildPortlet extends MVCPortlet{
 	@ProcessAction(name="addNewChild")
 	public void addNewChild(ActionRequest actionRequest, ActionResponse actionResponse) {
 		log.debug("START :: ManageChildPortlet.addNewChild()");
+		String firstName = actionRequest.getParameter("firstName");
+		String middleName = actionRequest.getParameter("middleName");
+		String lastName = actionRequest.getParameter("lastName");
+		String contactNo = actionRequest.getParameter("contactNo");
+		String dateOfBirth = actionRequest.getParameter("dateOfBirth");
+		String isChildActive = actionRequest.getParameter("isChildActive");
 		
+		System.out.println("firstName ::"+firstName);
+		System.out.println("middleName ::"+middleName);
+		System.out.println("lastName ::"+lastName);
+		System.out.println("contactNo ::"+contactNo);
+		System.out.println("dateOfBirth ::"+dateOfBirth);
+		System.out.println("isChildActive ::"+isChildActive);
+		if(ChildInfoValidator.isValidChildInfo(firstName, middleName, lastName, contactNo, dateOfBirth)){
+			
+		}
 		log.debug("END :: ManageChildPortlet.addNewChild()");
 	}
 	
@@ -80,6 +98,7 @@ public class ManageChildPortlet extends MVCPortlet{
 		log.debug("START :: ManageChildPortlet.viewChild()");
 		actionRequest.setAttribute("isNewChild", false);
 		actionRequest.setAttribute("isChildInfoEditable", false);
+		actionRequest.setAttribute("isChildInfoView", true);
 		actionResponse.setRenderParameter("mvcPath", "/manage-child/child-info-page.jsp");
 		log.debug("END :: ManageChildPortlet.viewChild()");
 	}
@@ -89,6 +108,7 @@ public class ManageChildPortlet extends MVCPortlet{
 		log.debug("START :: ManageChildPortlet.updateChild()");
 		actionRequest.setAttribute("isNewChild", false);
 		actionRequest.setAttribute("isChildInfoEditable", true);
+		actionRequest.setAttribute("isChildInfoView", false);
 		actionResponse.setRenderParameter("mvcPath", "/manage-child/child-info-page.jsp");
 		log.debug("END :: ManageChildPortlet.updateChild()");
 	}

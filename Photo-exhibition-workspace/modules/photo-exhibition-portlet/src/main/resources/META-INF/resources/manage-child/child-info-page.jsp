@@ -22,10 +22,16 @@
 	</div>
 </div>
 <portlet:actionURL var="addNewChildURL" name="addNewChild" />
+<c:if test="${isChildInfoEditable}">
+	<portlet:actionURL var="updateChildURL" name="updateChild" />
+</c:if>
+<c:if test="${isChildInfoEditable}">
+	<portlet:actionURL var="updateChildURL" name="updateChild" />
+</c:if>
 <liferay-portlet:renderURL varImpl="backButtonURL">
 	<portlet:param name="jspPage" value="/manage-child/view.jsp"/>
 </liferay-portlet:renderURL>
-<aui:form name="search_child_form" id="search_child_form" method="POST">
+<aui:form name="manage_child_form" id="manage_child_form" method="POST">
 	<div class="panel-body">
 		<c:choose>
 			<c:when test="${isNewChild}">
@@ -35,7 +41,7 @@
 				<c:if test="${isChildInfoEditable}">
 					<%@include file="update-child-info.jsp" %>
 				</c:if>
-				<c:if test="${isChildInfoEditable}">
+				<c:if test="${isChildInfoView}">
 					<%@include file="view-child-info.jsp" %>
 				</c:if>
 				
@@ -49,7 +55,7 @@
 				<c:choose>
 					<c:when test="${isNewChild}">
 						<div class="row">
-							<button class="btn btn-primary btn-default btn-small save-child-btn pull-right" id="save-child-btn" type="button">Save</button>
+							<button class="btn btn-primary btn-default btn-small save-child-btn pull-right" onClick="submitForm('addNewChild')" id="save-child-btn" type="button">Save</button>
 						</div>
 					</c:when>
 					<c:otherwise>
@@ -70,5 +76,15 @@ function backToList(){
 	a.setAttribute("href","<%=backButtonURL.toString() %>");
 	console.log("a ",a);
 	window.location.href = a.href;
+}
+function submitForm(elementType){
+	var form = $("#<portlet:namespace/>manage_child_form");
+	if(elementType == 'addNewChild'){
+		form.attr("action",'${addNewChildURL}');
+	} else if(elementType == 'updateChild'){
+		form.attr("action",'${updateChildURL}');
+	}
+	console.log("action url",'${addNewChildURL}');
+	form.submit();
 }
 </script>
