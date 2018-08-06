@@ -1,5 +1,5 @@
 <style>
-.switch {
+/* .switch {
   position: relative;
   display: inline-block;
   width: 60px;
@@ -53,5 +53,5 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
-}
+} */
 </style>

@@ -16,8 +16,8 @@
 		isOtpGeneralConfigFound = true;
 	}	
 %>
-<liferay-ui:success key="general-config-save-or-update-success-message" message="Configuration Saved successfully...!!!"/>
-<liferay-ui:error key="general-config-save-or-update-error-message" message="Sorry, Configuration Can not saved...!!!"/>
+<%@include file="../success-message.jsp" %>
+<%@include file="../error-message.jsp" %>
 <c:set var="isContestGeneralConfigFound" value="<%=isContestGeneralConfigFound %>"></c:set>
 <c:set var="contestConfigValue" value="<%=contestConfigValue %>"></c:set>
 <portlet:actionURL var="updateContestConfigURL" name="updateContestConfig" />

@@ -23,7 +23,7 @@
 </div>
 <portlet:actionURL var="addNewChildURL" name="addNewChild" />
 <c:if test="${isChildInfoEditable}">
-	<portlet:actionURL var="updateChildURL" name="updateChild" />
+	<portlet:actionURL var="updateChildURL" name="viewChild" />
 </c:if>
 <c:if test="${isChildInfoEditable}">
 	<portlet:actionURL var="updateChildURL" name="updateChild" />
@@ -49,19 +49,25 @@
 		</c:choose>
 		<div class="row">
 			<div class="col-md-6">
-				<button class="btn btn-primary btn-default btn-small back-btn" id="back-btn" onClick="backToList()" type="button">Back</button>
+				<button class="btn btn-primary btn-default btn-small back-btn" id="back-btn" onClick="backToList()" type="button">
+					<liferay-ui:message key="lbl.back.btn" />
+				</button>
 			</div>
 			<div class="col-md-6">
 				<c:choose>
 					<c:when test="${isNewChild}">
 						<div class="row">
-							<button class="btn btn-primary btn-default btn-small save-child-btn pull-right" onClick="submitForm('addNewChild')" id="save-child-btn" type="button">Save</button>
+							<button class="btn btn-primary btn-default btn-small save-child-btn pull-right" onClick="submitForm('addNewChild')" id="save-child-btn" type="button">
+								<liferay-ui:message key="lbl.save.btn" />
+							</button>
 						</div>
 					</c:when>
 					<c:otherwise>
 						<c:if test="${isChildInfoEditable}">
 							<div class="row">
-								<button class="btn btn-primary btn-default btn-small update-child-btn pull-right" id="update-child-btn" type="button">Update</button>
+								<button class="btn btn-primary btn-default btn-small update-child-btn pull-right" id="update-child-btn" type="button">
+									<liferay-ui:message key="lbl.update.btn" />
+								</button>
 							</div>
 						</c:if>
 					</c:otherwise>

@@ -32,6 +32,7 @@ import com.photoexhibition.service.util.GeneralConfigurationUtil;
 		property = {
 			"com.liferay.portlet.display-category=Photo-Exhibition",
 			"com.liferay.portlet.instanceable=true",
+			"com.liferay.portlet.header-portlet-css=/css/custom.css",
 			"add-process-action-success-action=false",
 			"javax.portlet.display-name=General Configuration Portlet",
 			"javax.portlet.init-param.template-path=/",

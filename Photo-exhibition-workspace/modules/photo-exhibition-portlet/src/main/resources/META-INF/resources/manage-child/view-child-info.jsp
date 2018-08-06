@@ -1,3 +1,7 @@
+<%@page import="com.photoexhibition.service.model.ChildInfo"%>
+<%
+	ChildInfo childInfo = (ChildInfo)request.getAttribute("childInfo");
+%>
 <div class="row">
 	<div class="col-md-4">
 		<aui:input readonly="true" name="firstName" id="firstName" type="text" label="lbl.child.first.name"
@@ -26,8 +30,8 @@
 			</aui:input>
 		</div>
 		<div style="border-bottom: 2px solid gray;">
-		     <input readonly="true" disabled="true" type="date" name="<portlet:namespace/>dateOfBirth" style="border: 0px;"
-		     value="${childInfo.dateOfBirth}">
+		     <input readonly="true" disabled="true" type="text" name="<portlet:namespace/>dateOfBirth" style="border: 0px;"
+		     value="<%=CommonUtil.displayFormattedDateWithoutDash(childInfo.getDateOfBirth())%>">
 		</div>
 		<div> 
 			<label class="switch">

@@ -19,12 +19,18 @@
 		<div>
 			<aui:input name="contactNo" id="contactNo" type="text" label="lbl.child.contact.number">
 				<aui:validator name="required"/>
+				<aui:validator name="number" errorMessage="Please enter number only"/>
+				<aui:validator name="maxLength" errorMessage="Very long number">13</aui:validator>
+				<aui:validator name="minLength" errorMessage="Very short number" >10</aui:validator>
 			</aui:input>
 		</div>
 		<div style="border-bottom: 2px solid gray;">
 		     <input type="date" name="<portlet:namespace/>dateOfBirth" style="border: 0px;">
 		</div>
 		<div>
+			<label class="active-child-wrapper">
+				<liferay-ui:message key="lbl.is.child.active" />
+			</label>
 			<label class="switch">
 				<input checked type="checkbox" name="<portlet:namespace />isChildActive" id="<portlet:namespace />isChildActive">
 				<span class="slider round"></span>
