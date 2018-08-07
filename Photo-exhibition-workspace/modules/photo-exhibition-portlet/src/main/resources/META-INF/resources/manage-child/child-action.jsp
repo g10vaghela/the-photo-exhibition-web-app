@@ -18,12 +18,12 @@
                 value="<%= String.valueOf(childInfo.getChildId()) %>" />
     </portlet:actionURL>
   
-    <portlet:actionURL name="updateChildScreen" var="updateChildURL">
+    <portlet:actionURL name="updateChildScreen" var="updateChildScreenURL">
             <portlet:param name="childId"
                 value="<%= String.valueOf(childInfo.getChildId()) %>" />
     </portlet:actionURL>
 
      <liferay-ui:icon icon="icon-eye-open" message="View" url="<%=viewChildURL.toString() %>" />
-     <liferay-ui:icon icon="icon-save" message="Update" url="<%=updateChildURL.toString() %>" />
+     <liferay-ui:icon icon="icon-save" message="Update" url="<%=updateChildScreenURL.toString() %>" />
 
 </liferay-ui:icon-menu>

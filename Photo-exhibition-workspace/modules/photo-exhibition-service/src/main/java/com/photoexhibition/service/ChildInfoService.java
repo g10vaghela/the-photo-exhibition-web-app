@@ -6,6 +6,7 @@ import com.photoexhibition.service.model.ChildInfo;
 import com.photoexhibition.service.search.criteria.ChildInfoSearchCriteria;
 
 public interface ChildInfoService {
+	public ChildInfo save(ChildInfo childInfo);
 	public void saveOrUpdate(ChildInfo childInfo);
 	public ChildInfo getChildInfoByChildRank(long childRank);
 	public ChildInfo getChildInfoById(long childId);

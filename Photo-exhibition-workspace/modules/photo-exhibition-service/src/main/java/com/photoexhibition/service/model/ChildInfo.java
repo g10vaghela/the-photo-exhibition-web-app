@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.liferay.portal.kernel.util.StringPool;
 
@@ -34,7 +36,7 @@ public class ChildInfo {
 	private String contactNo;
 	
 	@Column(name="photo_url")
-	private long photoUrl;
+	private String photoUrl;
 	
 	@Column(name="rank")
 	private long childRank;
@@ -42,17 +44,18 @@ public class ChildInfo {
 	@Column(name="status")
 	private boolean status;
 	
+	@Temporal(TemporalType.DATE)
 	@Column(name="date_of_birth", nullable = true)
 	private Date dateOfBirth;
-
-	public long getPhotoUrl() {
+	
+	public String getPhotoUrl() {
 		return photoUrl;
 	}
 
-	public void setPhotoUrl(long photoUrl) {
+	public void setPhotoUrl(String photoUrl) {
 		this.photoUrl = photoUrl;
 	}
-	
+
 	public long getChildId() {
 		return childId;
 	}

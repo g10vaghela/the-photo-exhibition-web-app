@@ -44,4 +44,9 @@ public class ChildInfoServiceImpl implements ChildInfoService{
 		return childInfoDao.getChildInfoCountBySearchCriteria(childInfoSearchCriteria);
 	}
 
+	@Override
+	public ChildInfo save(ChildInfo childInfo) {
+		return childInfoDao.save(childInfo);
+	}
+
 }

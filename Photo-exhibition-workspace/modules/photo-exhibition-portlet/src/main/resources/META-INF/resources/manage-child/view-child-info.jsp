@@ -48,5 +48,6 @@
 		</div>
 	</div>
 	<div class="col-md-8">
+		<img src="<%=childInfo.getPhotoUrl() %>" alt='<%="image of "+childInfo.getFullName() %>' width="250" height="300"/>
 	</div>
 </div>

@@ -4,3 +4,4 @@
 <!-- Child Info portlet message -->
 <liferay-ui:error key="child-info-save-or-update-error-message" message="Sorry, Child info Can not saved...!!!"/>
 <liferay-ui:error key="server-side-validation-fail-error-message" message="Server side data validation fail"/>
+<liferay-ui:error key="child-photo-save-or-update-error-message" message="Error in uploading photo"/>

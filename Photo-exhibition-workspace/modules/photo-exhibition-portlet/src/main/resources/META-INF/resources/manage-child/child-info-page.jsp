@@ -23,15 +23,17 @@
 </div>
 <portlet:actionURL var="addNewChildURL" name="addNewChild" />
 <c:if test="${isChildInfoEditable}">
-	<portlet:actionURL var="updateChildURL" name="viewChild" />
+	<portlet:actionURL var="viewChildURL" name="viewChild" />
 </c:if>
 <c:if test="${isChildInfoEditable}">
-	<portlet:actionURL var="updateChildURL" name="updateChild" />
+	<portlet:actionURL var="updateChildURL" name="updateChild">
+		<portlet:param name="childId" value="${childInfo.childId }"/>
+	</portlet:actionURL>
 </c:if>
 <liferay-portlet:renderURL varImpl="backButtonURL">
 	<portlet:param name="jspPage" value="/manage-child/view.jsp"/>
 </liferay-portlet:renderURL>
-<aui:form name="manage_child_form" id="manage_child_form" method="POST">
+<aui:form name="manage_child_form" id="manage_child_form" enctype="multipart/form-data" method="post">
 	<div class="panel-body">
 		<c:choose>
 			<c:when test="${isNewChild}">
@@ -65,7 +67,7 @@
 					<c:otherwise>
 						<c:if test="${isChildInfoEditable}">
 							<div class="row">
-								<button class="btn btn-primary btn-default btn-small update-child-btn pull-right" id="update-child-btn" type="button">
+								<button class="btn btn-primary btn-default btn-small update-child-btn pull-right" onClick="submitForm('updateChild')" id="update-child-btn" type="button">
 									<liferay-ui:message key="lbl.update.btn" />
 								</button>
 							</div>
@@ -90,7 +92,7 @@ function submitForm(elementType){
 	} else if(elementType == 'updateChild'){
 		form.attr("action",'${updateChildURL}');
 	}
-	console.log("action url",'${addNewChildURL}');
+	console.log("form ",form);
 	form.submit();
 }
 </script>

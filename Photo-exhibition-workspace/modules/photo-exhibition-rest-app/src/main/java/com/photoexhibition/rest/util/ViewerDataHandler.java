@@ -70,6 +70,7 @@ public class ViewerDataHandler {
 			advertiseJson.put(RestConstants.ADVERTISE_INFO, advertiseInfoList);
 			viewerInfoJson.put(RestConstants.VIEWER_ID, viewerInfo.getViewerId());
 			viewerInfoJson.put(RestConstants.IS_OTP_VERIFIED, viewerInfo.isOtpVerified());
+			viewerInfoJson.put(RestConstants.MESSAGE, "Viewer Login Successfully");
 			viewerInfoJson.put(RestConstants.RESPONSE_CODE, LoginResponseCode.SUCCESS.getValue());
 			JSONObject viewerJsonWrapper = JSONFactoryUtil.createJSONObject();
 			viewerJsonWrapper.put(RestConstants.VIEWER_INFO, viewerInfoJson);
@@ -90,7 +91,11 @@ public class ViewerDataHandler {
 		childJsonObject.put(RestConstants.CHILD_ID, childInfo.getChildId());
 		childJsonObject.put(RestConstants.CHILD_NAME, childInfo.getFullName());
 		childJsonObject.put(RestConstants.IS_LIKE, isLike);
-		childJsonObject.put(RestConstants.PHOTO_URL, childInfo.getPhotoUrl());
+		if(Validator.isNull(childInfo.getPhotoUrl())){
+			childJsonObject.put(RestConstants.PHOTO_URL, "null");
+		} else {
+			childJsonObject.put(RestConstants.PHOTO_URL, childInfo.getPhotoUrl());
+		}
 		log.debug("END :: ViewerDataHandler.getJsonByObject()");
 		return childJsonObject;
 	}

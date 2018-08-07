@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.Validator"%>
 <%@page import="com.photoexhibition.service.model.ChildInfo"%>
 <%
 	ChildInfo childInfo = (ChildInfo)request.getAttribute("childInfo");
@@ -33,7 +34,7 @@
 			</aui:input>
 		</div>
 		<div style="border-bottom: 2px solid gray;">
-		      <input readonly="true" disabled="true" type="text" name="<portlet:namespace/>dateOfBirth" style="border: 0px;"
+		      <input type="text" name="<portlet:namespace/>dateOfBirth" style="border: 0px;"
 		     value="<%=CommonUtil.displayFormattedDateWithoutDash(childInfo.getDateOfBirth())%>">
 		</div>
 		<div> 
@@ -51,5 +52,17 @@
 		</div>
 	</div>
 	<div class="col-md-8">
+		<c:choose>
+			<c:when test="<%=Validator.isNotNull(childInfo.getPhotoUrl())%>">
+				<img src="<%=childInfo.getPhotoUrl() %>" alt='<%="image of "+childInfo.getFullName() %>' width="250" height="300"/>
+			</c:when>
+			<c:otherwise>
+				<div>
+					<aui:input name="fileUpload" type="file" label="Child Photo" value="Save" accept="image/*" >
+						<aui:validator name="required" ></aui:validator>
+					</aui:input>
+				</div>
+			</c:otherwise>
+		</c:choose>
 	</div>
 </div>

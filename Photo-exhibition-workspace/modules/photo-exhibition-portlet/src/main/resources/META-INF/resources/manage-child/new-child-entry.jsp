@@ -1,16 +1,17 @@
 <div class="row">
 	<div class="col-md-4">
 		<aui:input name="firstName" id="firstName" type="text" label="lbl.child.first.name">
+			<aui:validator name="required" errorMessage="Please Enter First Name"/>
 		</aui:input>	
 	</div>
 	<div class="col-md-4">
 		<aui:input name="middleName" id="middleName" type="text" label="lbl.child.middle.name">
-			<aui:validator name="required"/>
+			<aui:validator name="required" errorMessage="Please Enter Middle Name"/>
 		</aui:input>
 	</div>
 	<div class="col-md-4">
 		<aui:input name="lastName" id="lastName" type="text" label="lbl.child.last.name">
-			<aui:validator name="required"/>
+			<aui:validator name="required" errorMessage="Please Enter Last Name"/>
 		</aui:input>
 	</div>
 </div>
@@ -38,5 +39,10 @@
 		</div>
 	</div>
 	<div class="col-md-8">
+		<div>
+			<aui:input name="fileUpload" type="file" label="Child Photo" value="Save" accept="image/*" >
+				<aui:validator name="required" ></aui:validator>
+			</aui:input>
+		</div>
 	</div>
 </div>

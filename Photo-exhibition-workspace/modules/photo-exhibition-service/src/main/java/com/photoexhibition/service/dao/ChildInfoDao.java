@@ -19,6 +19,27 @@ import com.photoexhibition.service.search.criteria.ChildInfoSearchCriteria;
 public class ChildInfoDao extends BaseDao{
 	private static final Log log = LogFactoryUtil.getLog(ChildInfoDao.class);
 	
+	public ChildInfo save(ChildInfo childInfo){
+		log.debug("START :: ChildInfoDao.save()");
+		Session session = getSession();
+		Transaction transaction = session.getTransaction();
+		try {
+			transaction.begin();
+			System.out.println("Before childInfo  ::"+childInfo);
+			session.save(childInfo);
+			System.out.println("After childInfo  ::"+childInfo);
+			transaction.commit();
+			return childInfo;
+		} catch (Exception e) {
+			log.error("Error :: "+e);
+			transaction.rollback();
+		} finally {
+			closeSession(session);
+		}
+		log.debug("END :: ChildInfoDao.save()");
+		return null;
+	}
+	
 	public void saveOrUpdate(ChildInfo childInfo){
 		log.debug("START :: ChildInfoDao.saveOrUpdate()");
 		Session session = getSession();

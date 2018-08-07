@@ -24,8 +24,10 @@ public class ViewerInfoDao extends BaseDao{
 		Transaction transaction = session.getTransaction();
 		try {
 			transaction.begin();
-			long viewerId = (long) session.save(viewerInfo);
-			session.get(ViewerInfo.class, viewerId);
+			System.out.println("Before viewerInfo :: "+viewerInfo);
+			session.save(viewerInfo);
+			System.out.println("after viewerInfo :: "+viewerInfo);
+			/*viewerInfo = (ViewerInfo)session.get(ViewerInfo.class, viewerId);*/
 			transaction.commit();
 		} catch(Exception e){
 			log.error("Error :: "+e);
