@@ -5,3 +5,4 @@
 <%@page import="com.photoexhibition.service.model.GeneralConfigurationInfo"%>
 <%@page import="com.photoexhibition.service.util.CommonUtil"%>
 <%@page import="com.photoexhibition.service.model.ChildInfo"%>
+<%@page import="com.photoexhibition.service.util.PhotoOrientation"%>

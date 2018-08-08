@@ -1,9 +1,11 @@
 package com.photoexhibition.portlet;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -14,6 +16,11 @@ import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.osgi.service.component.annotations.Component;
 
 import com.liferay.document.library.kernel.model.DLFileEntry;
@@ -37,6 +44,7 @@ import com.photoexhibition.service.search.criteria.ChildInfoSearchCriteria;
 import com.photoexhibition.service.util.BeanLocalServiceUtil;
 import com.photoexhibition.service.util.CommonUtil;
 import com.photoexhibition.service.util.FileAndFolderHandler;
+import com.photoexhibition.service.util.PhotoOrientation;
 
 @Component(
 		immediate = true,
@@ -116,6 +124,7 @@ public class ManageChildPortlet extends MVCPortlet{
 			String contactNo = actionRequest.getParameter("contactNo");
 			String dateOfBirth = actionRequest.getParameter("dateOfBirth");
 			String isChildActive = actionRequest.getParameter("isChildActive");
+			String orientation = actionRequest.getParameter("orientation");
 		
 			System.out.println("firstName ::"+firstName);
 			System.out.println("middleName ::"+middleName);
@@ -123,6 +132,7 @@ public class ManageChildPortlet extends MVCPortlet{
 			System.out.println("contactNo ::"+contactNo);
 			System.out.println("dateOfBirth ::"+dateOfBirth);
 			System.out.println("isChildActive ::"+isChildActive);
+			System.out.println("orientation ::"+orientation);
 			if(ChildInfoValidator.isValidChildInfo(firstName, middleName, lastName, contactNo, dateOfBirth)){
 				ChildInfo childInfo = new ChildInfo();
 				childInfo.setFirstName(firstName);
@@ -130,6 +140,7 @@ public class ManageChildPortlet extends MVCPortlet{
 				childInfo.setLastName(lastName);
 				childInfo.setContactNo(contactNo);
 				childInfo.setDateOfBirth(simpleDateFormat.parse(dateOfBirth));
+				childInfo.setOrientation(Integer.parseInt(orientation));
 				if(Validator.isNotNull(isChildActive)) {
 					childInfo.setStatus(true);
 				} else {
@@ -163,22 +174,16 @@ public class ManageChildPortlet extends MVCPortlet{
 		if(Validator.isNotNull(file)){
 			DLFolder homeDLFolder = null;
 			try {
-				System.out.println("test 1");
 				homeDLFolder = FileAndFolderHandler.getDLFolder(FileConstant.HOME_FOLDER_NAME, themeDisplay, parentFolderId);	
-				System.out.println("test 2");
 			} catch (Exception e) {
-				System.out.println("test 3");
 				log.info("Home Folder Not exist, Now going to create new one");
 				homeDLFolder = FileAndFolderHandler.createDLFolder(actionRequest, themeDisplay, FileConstant.HOME_FOLDER_NAME, "Folder "+FileConstant.HOME_FOLDER_NAME,parentFolderId);
 				log.info("Home Folder created : "+homeDLFolder);
-				System.out.println("test 4");
 			}
 			log.info("Home folder :: "+homeDLFolder);
 			DLFolder childFolder = null;
 			try {
-				System.out.println("test 5");
 				childFolder = FileAndFolderHandler.getDLFolder(String.valueOf(childInfo.getChildId()), themeDisplay, parentFolderId);
-				System.out.println("test 6");
 			} catch (Exception e) {
 				log.info("Child folder not found, Now creating new one");
 				childFolder = FileAndFolderHandler.createDLFolder(actionRequest, themeDisplay, String.valueOf(childInfo.getChildId()), "Folder of ChildId:"+childInfo.getChildId(),homeDLFolder.getFolderId());
@@ -299,5 +304,54 @@ public class ManageChildPortlet extends MVCPortlet{
 		log.info("childId ::"+childId);
 		log.info("contectNumber ::"+contectNumber);
 		log.info("contectNumber1 ::"+contectNumber1);
+	}
+	
+	@ProcessAction(name="importBulkChildData")
+	public void importBulkChildData(ActionRequest actionRequest, ActionResponse actionResponse) {
+		System.out.println("ManageChildPortlet.importBulkChildData()");
+		File file = FileAndFolderHandler.getUploadedFile(actionRequest);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			FileInputStream fileInputStream = new FileInputStream(file);
+			Workbook workbook = new HSSFWorkbook(fileInputStream);
+			System.out.println("sheet :: "+workbook.getNumberOfSheets());
+			Sheet firstSheet = workbook.getSheetAt(0);
+			Iterator<Row> iterator = firstSheet.iterator();
+			while (iterator.hasNext()) {
+				 Row nextRow = iterator.next();
+				 DataFormatter formatter = new DataFormatter();
+				 String firstName = formatter.formatCellValue(nextRow.getCell(0));
+				 String middleName = formatter.formatCellValue(nextRow.getCell(1));
+				 String lastName = formatter.formatCellValue(nextRow.getCell(2));
+				 String contactNo = formatter.formatCellValue(nextRow.getCell(3));
+				 String dob= formatter.formatCellValue(nextRow.getCell(4));
+				 
+				 log.info("------------------------------------------");
+				 log.info("FirstName ::"+firstName);
+				 log.info("MiddleName ::"+middleName);
+				 log.info("LastName ::"+lastName);
+				 log.info("Contact NO ::"+contactNo);
+				 log.info("DOB ::"+dob);
+				 log.info("------------------------------------------");
+				 if(ChildInfoValidator.isValidChildInfo(firstName, middleName, lastName, contactNo, dob)){
+					 ChildInfo childInfo = new ChildInfo();
+					 childInfo.setFirstName(firstName);
+					 childInfo.setMiddleName(middleName);
+					 childInfo.setLastName(lastName);
+					 childInfo.setContactNo(contactNo);
+					 childInfo.setDateOfBirth(simpleDateFormat.parse(dob));
+					 childInfo.setPhotoUrl(null);
+					 childInfo.setOrientation(PhotoOrientation.LANDSCAPE.getValue());
+					 childInfo.setStatus(true);
+					 childInfoService.save(childInfo);
+					 log.info("child saved");
+				 } else {
+					 log.error("======>>Child Not saved");
+				 }
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("file Name"+file.getName());
 	}
 }

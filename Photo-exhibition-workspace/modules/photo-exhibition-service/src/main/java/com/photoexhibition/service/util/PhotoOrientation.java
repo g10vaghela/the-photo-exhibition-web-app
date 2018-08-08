@@ -1,10 +1,8 @@
 package com.photoexhibition.service.util;
 
-public enum LoginResponseCode {
-	SUCCESS("success",1),
-	OTP_SENT("otp sent",2),
-	ERROR("error",3),
-	VALIDATION_FAIL("validation fail",4);
+public enum PhotoOrientation {
+	LANDSCAPE("landscape",11),
+	PORTRAIT("portrait",12);
 
 	private final String message;
 	private final int value;
@@ -17,7 +15,7 @@ public enum LoginResponseCode {
 		return message;
 	}
 
-	private LoginResponseCode(String message, int value) {
+	private PhotoOrientation(String message, int value) {
 		this.message = message;
 		this.value = value;
 	}

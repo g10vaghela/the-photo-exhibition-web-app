@@ -44,10 +44,21 @@ public class ChildInfo {
 	@Column(name="status")
 	private boolean status;
 	
+	@Column(name="photo_orientation", nullable=true)
+	private int orientation;
+	
 	@Temporal(TemporalType.DATE)
 	@Column(name="date_of_birth", nullable = true)
 	private Date dateOfBirth;
-	
+
+	public int getOrientation() {
+		return orientation;
+	}
+
+	public void setOrientation(int orientation) {
+		this.orientation = orientation;
+	}
+
 	public String getPhotoUrl() {
 		return photoUrl;
 	}
@@ -134,6 +145,7 @@ public class ChildInfo {
 	public String toString() {
 		return "ChildInfo [childId=" + childId + ", firstName=" + firstName + ", middleName=" + middleName
 				+ ", lastName=" + lastName + ", contactNo=" + contactNo + ", photoUrl=" + photoUrl + ", childRank="
-				+ childRank + ", status=" + status + ", dateOfBirth=" + dateOfBirth + "]";
+				+ childRank + ", status=" + status + ", orientation=" + orientation + ", dateOfBirth=" + dateOfBirth
+				+ "]";
 	}
 }

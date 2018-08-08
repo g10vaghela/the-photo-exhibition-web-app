@@ -37,6 +37,10 @@
 				<span class="slider round"></span>
 			</label>
 		</div>
+		<div>
+			<input type="radio" name="<portlet:namespace />orientation" id="<portlet:namespace />orientation" value="<%=PhotoOrientation.LANDSCAPE.getValue() %>"><liferay-ui:message key="lbl.photo.orientation.landscape" /><br>
+			<input type="radio" checked name="<portlet:namespace />orientation" id="<portlet:namespace />orientation" value="<%=PhotoOrientation.PORTRAIT.getValue() %>"><liferay-ui:message key="lbl.photo.orientation.portrait" /><br>
+		</div>
 	</div>
 	<div class="col-md-8">
 		<div>

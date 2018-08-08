@@ -232,15 +232,10 @@ public class FileAndFolderHandler {
 		String fileInputName = request.getParameter("fileUpload");
 		File file = null;
 		try {
-			System.out.println("fileInputName ::"+fileInputName);
 			UploadPortletRequest uploadPortletRequest = PortalUtil.getUploadPortletRequest(request);
-			System.out.println("1");
 			String mimeType = uploadPortletRequest.getContentType();
-			System.out.println("2");
 			file = uploadPortletRequest.getFile("fileUpload");
-			System.out.println("3");
 			//String mT = MimeTypesUtil.getContentType(file);
-			System.out.println("4");
 			//log.info("Mime Type :: " + mimeType + " MT : " + mT);
 			if(uploadPortletRequest.getFileNames("fileUpload").length > 0){
 				if(uploadPortletRequest.getFileNames("fileUpload")[0] != ""){
@@ -251,36 +246,7 @@ public class FileAndFolderHandler {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		/*UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(request);
- 
-		long sizeInBytes = uploadRequest.getSize(fileInputName);
-		log.info("File Size ::"+sizeInBytes);
-		if (uploadRequest.getSize(fileInputName) == 0) {
-			throw new Exception("Received file is 0 bytes!");
-		}
- 
-		// Get the uploaded file as a file.
-		File uploadedFile = uploadRequest.getFile(fileInputName);*/
- 
-/*		String sourceFileName = uploadRequest.getFileName(fileInputName);
- 
-		
-		// Where should we store this file?
-		File folder = new File(baseDir);
- 
-		// Check minimum 1GB storage space to save new files...
-		
-		if (folder.getUsableSpace() < ONE_GB) {
-			throw new Exception("Out of disk space!");
-		}
- 
-		// This is our final file path.
-		File filePath = new File(folder.getAbsolutePath() + File.separator + sourceFileName);
- 
-		// Move the existing temporary file to new location.
-		FileUtils.copyFile(uploadedFile, filePath);*/
-		
+		}		
 		return file;
 	}
 }

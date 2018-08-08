@@ -13,6 +13,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.photoexhibition.rest.constant.RestConstants;
+import com.photoexhibition.rest.util.validator.Validate;
 import com.photoexhibition.service.ViewerInfoService;
 import com.photoexhibition.service.constant.GeneralConfigurationConstants;
 import com.photoexhibition.service.model.ViewerInfo;
@@ -31,46 +32,58 @@ public class ViewerLoginHandler {
 		JSONArray responseJsonArray = JSONFactoryUtil.createJSONArray();
 		try {
 			log.info("Getting viewer details for Mobile number :: "+mobileNumber+" and device number :: "+deviceNumber);
-			ViewerInfo viewerInfo = viewerInfoService.getViewerInfoByMobileAndDeviceNumber(mobileNumber, deviceNumber);
-			log.info("Is Gegistered Viewer :"+Validator.isNotNull(viewerInfo));
-			if(Validator.isNotNull(viewerInfo)) {
-				log.info("Gegistered viewer found now checking for mobile number verification");
-				log.info("Is viewer mobile number : "+mobileNumber+" verified ? "+viewerInfo.isOtpVerified());
-				//Registered viewer found
-				if(viewerInfo.isOtpVerified()) {
-					log.info("Mobile number is verified for viewer");
-					//viewer is registered and mobile number is verified
-					responseJsonArray = ViewerDataHandler.getViewerResponseJson(viewerInfo);
-				} else {
-					log.info("Mobile number not verified");
-					log.info("Verification process started....");
-					//viewer is registered but mobile number not verified
-					responseJsonArray = getViewerOtpJson(viewerInfo);
-				}
-			} else {
-				log.info("Viewer not found with given mobile number and device");
-				viewerInfo = viewerInfoService.getViewerInfoByMobileNumber(mobileNumber);
-				log.info("Checking whether mobile number :"+mobileNumber+" is registered with other device ?");
+			if(Validate.isValidPhoneNumber(mobileNumber) && Validate.isValidDeviceNumber(deviceNumber)){
+				ViewerInfo viewerInfo = viewerInfoService.getViewerInfoByMobileAndDeviceNumber(mobileNumber, deviceNumber);
+				log.info("Is Gegistered Viewer :"+Validator.isNotNull(viewerInfo));
 				if(Validator.isNotNull(viewerInfo)) {
-					log.info("Yes, Mobile number is registered with other device number");
-					responseJsonArray = getErrorResponseForRegisteredViewer(viewerInfo,GeneralConfigurationConstants.REGISTERED_MOBILE_NUMBER_ERROR);
-				} else {
-					log.info("No, Mobile number not registered");
-					viewerInfo = viewerInfoService.getViewerInfoByDeviceNumber(deviceNumber);
-					log.info("Checking whether device number : "+deviceNumber+" is registered with other mobile number ?");
-					if(Validator.isNotNull(viewerInfo)) {
-						log.info("Yes, Device is Registered with other mobile number");
-						responseJsonArray = getErrorResponseForRegisteredViewer(viewerInfo,GeneralConfigurationConstants.REGISTERED_DEVICE_NUMBER_ERROR);
+					log.info("Gegistered viewer found now checking for mobile number verification");
+					log.info("Is viewer mobile number : "+mobileNumber+" verified ? "+viewerInfo.isOtpVerified());
+					//Registered viewer found
+					if(viewerInfo.isOtpVerified()) {
+						log.info("Mobile number is verified for viewer");
+						//viewer is registered and mobile number is verified
+						responseJsonArray = ViewerDataHandler.getViewerResponseJson(viewerInfo);
 					} else {
-						log.info("No, This is new viewer");
-						viewerInfo = new ViewerInfo();
-						viewerInfo.setMobileNumber(mobileNumber);
-						viewerInfo.setDeviceNumber(deviceNumber);
-						viewerInfo = viewerInfoService.save(viewerInfo);
-						log.info("Creating new viewer in the system");
+						log.info("Mobile number not verified");
+						log.info("Verification process started....");
+						//viewer is registered but mobile number not verified
 						responseJsonArray = getViewerOtpJson(viewerInfo);
 					}
+				} else {
+					log.info("Viewer not found with given mobile number and device");
+					viewerInfo = viewerInfoService.getViewerInfoByMobileNumber(mobileNumber);
+					log.info("Checking whether mobile number :"+mobileNumber+" is registered with other device ?");
+					if(Validator.isNotNull(viewerInfo)) {
+						log.info("Yes, Mobile number is registered with other device number");
+						responseJsonArray = getErrorResponseForRegisteredViewer(viewerInfo,GeneralConfigurationConstants.REGISTERED_MOBILE_NUMBER_ERROR);
+					} else {
+						log.info("No, Mobile number not registered");
+						viewerInfo = viewerInfoService.getViewerInfoByDeviceNumber(deviceNumber);
+						log.info("Checking whether device number : "+deviceNumber+" is registered with other mobile number ?");
+						if(Validator.isNotNull(viewerInfo)) {
+							log.info("Yes, Device is Registered with other mobile number");
+							responseJsonArray = getErrorResponseForRegisteredViewer(viewerInfo,GeneralConfigurationConstants.REGISTERED_DEVICE_NUMBER_ERROR);
+						} else {
+							log.info("No, This is new viewer");
+							viewerInfo = new ViewerInfo();
+							viewerInfo.setMobileNumber(mobileNumber);
+							viewerInfo.setDeviceNumber(deviceNumber);
+							viewerInfo = viewerInfoService.save(viewerInfo);
+							log.info("Creating new viewer in the system");
+							responseJsonArray = getViewerOtpJson(viewerInfo);
+						}
+					}
 				}
+			} else {
+				log.info("Invalid mobile number or device number");
+				JSONObject viewerJson = JSONFactoryUtil.createJSONObject();
+				JSONObject viewerJsonWrapper = JSONFactoryUtil.createJSONObject();
+				viewerJson.put(RestConstants.VIEWER_ID, "");
+				viewerJson.put(RestConstants.IS_OTP_VERIFIED, false);
+				viewerJson.put(RestConstants.RESPONSE_CODE, LoginResponseCode.VALIDATION_FAIL.getValue());
+				viewerJson.put(RestConstants.MESSAGE, "Invalid Mobile number and/or device number");
+				viewerJsonWrapper.put(RestConstants.VIEWER_INFO, viewerJson);
+				responseJsonArray.put(viewerJsonWrapper);
 			}
 		} catch (Exception e) {
 			log.error("Error ::"+e);

@@ -1,3 +1,4 @@
+<%@page import="com.photoexhibition.service.util.PhotoOrientation"%>
 <%@page import="com.photoexhibition.service.model.ChildInfo"%>
 <%
 	ChildInfo childInfo = (ChildInfo)request.getAttribute("childInfo");
@@ -34,6 +35,9 @@
 		     value="<%=CommonUtil.displayFormattedDateWithoutDash(childInfo.getDateOfBirth())%>">
 		</div>
 		<div> 
+			<label class="active-child-wrapper">
+				<liferay-ui:message key="lbl.is.child.active" />
+			</label>
 			<label class="switch">
 				<c:choose>
 					<c:when test="${childInfo.status}">
@@ -48,6 +52,13 @@
 		</div>
 	</div>
 	<div class="col-md-8">
-		<img src="<%=childInfo.getPhotoUrl() %>" alt='<%="image of "+childInfo.getFullName() %>' width="250" height="300"/>
+		<c:choose>
+			<c:when  test="<%=childInfo.getOrientation() == PhotoOrientation.LANDSCAPE.getValue() %>">
+				<img src="<%=childInfo.getPhotoUrl() %>" alt='<%="image of "+childInfo.getFullName() %>' width="350" height="250"/>
+			</c:when>
+			<c:otherwise>
+				<img src="<%=childInfo.getPhotoUrl() %>" alt='<%="image of "+childInfo.getFullName() %>' width="250" height="350"/>
+			</c:otherwise>
+		</c:choose>
 	</div>
 </div>

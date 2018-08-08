@@ -26,6 +26,10 @@
 	<portlet:param name="childId" value="<%=String.valueOf(searchCriteria.getChildId()) %>"/>
 	<portlet:param name="contectNumber" value="<%=searchCriteria.getContactNo() %>"/>
 </liferay-portlet:renderURL>
+<liferay-portlet:renderURL varImpl="importBulkChildURL">
+	<portlet:param name="mvcPath" value="/manage-child/import-bulk-child-page.jsp" />
+</liferay-portlet:renderURL>
+
 <aui:form name="search_child_form" id="search_child_form">
 	<div class="panel-body">
 		<div class="row">
@@ -47,15 +51,20 @@
 					placeholder="lbl.contact.number.placeholder">
 				</aui:input>
 			</div>
-			<div class="col-md-3 align-items-center">
+			<div class="col-md-2 align-items-center">
 				<button class="btn btn-primary btn-default btn-small searc-child-btn" id="search-child-btn" type="button">
 					<liferay-ui:message key="btn.search" />
 				</button>
 			</div>
-			<div class="col-md-3 align-items-center">
-				<button class="btn btn-primary btn-default btn-small add-child-btn pull-right" id="add-child-btn">
-					<liferay-ui:message key="btn.add.new.child" />
-				</button>
+			<div class="col-md-4 align-items-center">
+				<div class="col-md-6">
+					<aui:button onClick="<%=importBulkChildURL.toString() %>" class = "btn btn-primary btn-default btn-small pull-right" value="Back To List"></aui:button>
+				</div>
+				<div class="col-md-6">
+					<button class="btn btn-primary btn-default btn-small add-child-btn pull-right" id="add-child-btn">
+						<liferay-ui:message key="btn.add.new.child" />
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>

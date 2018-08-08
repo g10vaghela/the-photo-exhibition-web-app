@@ -1,3 +1,4 @@
+<%@page import="com.photoexhibition.service.util.PhotoOrientation"%>
 <%@page import="com.liferay.portal.kernel.util.Validator"%>
 <%@page import="com.photoexhibition.service.model.ChildInfo"%>
 <%
@@ -37,7 +38,10 @@
 		      <input type="text" name="<portlet:namespace/>dateOfBirth" style="border: 0px;"
 		     value="<%=CommonUtil.displayFormattedDateWithoutDash(childInfo.getDateOfBirth())%>">
 		</div>
-		<div> 
+		<div>
+			<label class="active-child-wrapper">
+				<liferay-ui:message key="lbl.is.child.active" />
+			</label> 
 			<label class="switch">
 				<c:choose>
 					<c:when test="${childInfo.status}">
@@ -50,11 +54,30 @@
 			  <span class="slider round"></span>
 			</label>
 		</div>
+		<c:if test="<%=Validator.isNull(childInfo.getPhotoUrl())%>">
+			<div>
+				<c:choose>
+					<c:when  test="<%=childInfo.getOrientation() == PhotoOrientation.LANDSCAPE.getValue() %>">
+						<input type="radio" checked name="<portlet:namespace />orientation" id="<portlet:namespace />orientation" value="<%=PhotoOrientation.LANDSCAPE.getValue() %>"><liferay-ui:message key="lbl.photo.orientation.landscape" /><br>
+						<input type="radio" name="<portlet:namespace />orientation" id="<portlet:namespace />orientation" value="<%=PhotoOrientation.PORTRAIT.getValue() %>"><liferay-ui:message key="lbl.photo.orientation.portrait" /><br>
+					</c:when>
+					<c:otherwise>
+						<input type="radio" name="<portlet:namespace />orientation" id="<portlet:namespace />orientation" value="<%=PhotoOrientation.LANDSCAPE.getValue() %>"><liferay-ui:message key="lbl.photo.orientation.landscape" /><br>
+						<input type="radio" checked name="<portlet:namespace />orientation" id="<portlet:namespace />orientation" value="<%=PhotoOrientation.PORTRAIT.getValue() %>"><liferay-ui:message key="lbl.photo.orientation.portrait" /><br>
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</c:if>
 	</div>
 	<div class="col-md-8">
 		<c:choose>
 			<c:when test="<%=Validator.isNotNull(childInfo.getPhotoUrl())%>">
-				<img src="<%=childInfo.getPhotoUrl() %>" alt='<%="image of "+childInfo.getFullName() %>' width="250" height="300"/>
+				<c:if test="<%=childInfo.getOrientation() == PhotoOrientation.LANDSCAPE.getValue() %>">
+					<img src="<%=childInfo.getPhotoUrl() %>" alt='<%="image of "+childInfo.getFullName() %>' width="350" height="250"/>
+				</c:if>
+				<c:if test="<%=childInfo.getOrientation() == PhotoOrientation.PORTRAIT.getValue() %>">
+					<img src="<%=childInfo.getPhotoUrl() %>" alt='<%="image of "+childInfo.getFullName() %>' width="250" height="350"/>
+				</c:if>
 			</c:when>
 			<c:otherwise>
 				<div>

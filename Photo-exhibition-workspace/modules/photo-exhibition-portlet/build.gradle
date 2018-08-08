@@ -12,4 +12,5 @@ dependencies {
 	compile group: 'com.liferay', name: 'com.liferay.osgi.util', version: '1.0.0'
 	
 	compile project(":modules:photo-exhibition-service")
+	compile fileTree(dir: 'lib', include: '*.jar')
 }
