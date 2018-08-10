@@ -4,3 +4,6 @@
 
 <!-- Manage Child Info portlet message -->
 <liferay-ui:success key="child-info-save-or-update-success-message" message="Child Info Saved successfully...!!!"/>
+
+<!-- Advertisement info portlet message -->
+<liferay-ui:success key="advertise-save-or-update-success-message" message="Advertisement Saved successfully...!!!"/>

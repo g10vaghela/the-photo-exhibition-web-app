@@ -26,9 +26,12 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.photoexhibition.rest.constant.RestConstants;
 import com.photoexhibition.rest.util.ContestUtil;
 import com.photoexhibition.rest.util.LikeHandler;
+import com.photoexhibition.rest.util.LocationHandler;
 import com.photoexhibition.rest.util.OtpHandler;
 import com.photoexhibition.rest.util.ViewerDataHandler;
 import com.photoexhibition.rest.util.ViewerLoginHandler;
+import com.photoexhibition.service.model.GeneralConfigurationInfo;
+import com.photoexhibition.service.util.GeneralConfigurationUtil;
 
 /**
  * @author jiten
@@ -87,10 +90,33 @@ public class PhotoExhibitionRestControllerApplication extends Application {
 	@GET
 	@Path("/iscontestopen")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response isContestOpen() {
+	public Response isContestOpen(@QueryParam("locationInfo") String locationInfo) {
+		log.debug("locationInfo ::"+locationInfo);
 		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
-		responseJsonObject.put(RestConstants.STATUS_CODE, HttpStatus.OK.value());
-		responseJsonObject.put(RestConstants.DATA, ContestUtil.checkContestOpen());
+		try {
+			responseJsonObject.put(RestConstants.STATUS_CODE, HttpStatus.OK.value());
+			JSONObject viewrLocation = JSONFactoryUtil.createJSONObject(locationInfo);
+			double latitude = viewrLocation.getDouble("latitude");
+			double longitude = viewrLocation.getDouble("longitude");
+			log.info("latitude ::"+latitude);
+			log.info("longitude ::"+longitude);
+			GeneralConfigurationInfo generalConfigurationInfo =  GeneralConfigurationUtil.getValidDistanceFromContestLocation();
+			boolean isViewerInRange = LocationHandler.isViewerInRangeOfContest(longitude, latitude,Double.parseDouble(generalConfigurationInfo.getValue()));
+			boolean isLocationTrackingOn = GeneralConfigurationUtil.isLocationTrackingOn(); 
+			log.info("isViewerInRange :: "+isViewerInRange);
+			log.info("IsLocationTrackingOn ::"+ isLocationTrackingOn);
+			if(!isLocationTrackingOn || isViewerInRange){
+				responseJsonObject.put(RestConstants.DATA, ContestUtil.checkContestOpen());
+			} else {
+				JSONObject contestJsonObject = JSONFactoryUtil.createJSONObject();
+				contestJsonObject.put(RestConstants.IS_CONTEST_OPEN, false);
+				contestJsonObject.put(RestConstants.MESSAGE, generalConfigurationInfo.getMessage());
+				responseJsonObject.put(RestConstants.DATA, contestJsonObject);
+			}
+		} catch (Exception e) {
+			log.error("Error ::"+e);
+			e.printStackTrace();
+		}
 		return Response.status(HttpStatus.OK.value()).entity(responseJsonObject.toString()).build();
 	}
 	

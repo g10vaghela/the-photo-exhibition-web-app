@@ -13,4 +13,7 @@ public class GeneralConfigurationConstants {
 	public static final String REGISTERED_DEVICE_NUMBER_ERROR = "REGISTERED_DEVICE_NUMBER_ERROR";// msg = Device already registered  -->> value=null
 	public static final String OTP_SENT_SUCCESSFULLY_MSG = "OTP_SENT_SUCCESSFULLY_MSG";// msg = Otp sent to your registered mobile number -->> value=null
 	public static final String IS_LIKE_SERVICE_OPEN = "IS_LIKE_SERVICE_OPEN";// msg = Sorry, Like service is closed -->> value=false
+	public static final String VALID_DISTANCE_FROM_CONTEST_LOCATION = "VALID_DISTANCE_FROM_CONTEST_LOCATION";// msg = Sorry, Like service is closed -->> value=false
+	public static final String CONTEST_LOCATION_LAT_LONG = "CONTEST_LOCATION_LAT_LONG";// msg = Sorry, Like service is closed -->> value=false
+	public static final String IS_LOCATION_TRACKING_ON = "IS_LOCATION_TRACKING_ON";// msg = Sorry, Like service is closed -->> value=false
 }

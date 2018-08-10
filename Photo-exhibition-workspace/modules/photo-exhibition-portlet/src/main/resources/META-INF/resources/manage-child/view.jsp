@@ -12,13 +12,6 @@
 %>
 <%@include file="../success-message.jsp" %>
 <%@include file="../error-message.jsp" %>
-<div class="row">
-	<div class="col-md-12">
-		<div class="section-title-b">
-			<liferay-ui:message key="lbl.child.manage.title" />
-		</div>
-	</div>
-</div>
 <portlet:actionURL var="openAddNewChildWindowURL" name="openAddNewChildWindow" />
 <liferay-portlet:renderURL varImpl="iteratorURL">
 	<portlet:param name="mvcPath" value="/manage-child/view.jsp" />
@@ -58,7 +51,7 @@
 			</div>
 			<div class="col-md-4 align-items-center">
 				<div class="col-md-6">
-					<aui:button onClick="<%=importBulkChildURL.toString() %>" class = "btn btn-primary btn-default btn-small pull-right" value="Back To List"></aui:button>
+					<aui:button onClick="<%=importBulkChildURL.toString() %>" cssClass = "btn btn-primary btn-default btn-small pull-right" value="Back To List"></aui:button>
 				</div>
 				<div class="col-md-6">
 					<button class="btn btn-primary btn-default btn-small add-child-btn pull-right" id="add-child-btn">
@@ -150,19 +143,3 @@ $(document).ready(function(){
 	});
 });
 </script>
-<style>
-.dot-green {
-  height: 25px;
-  width: 25px;
-  background-color: #02f320;
-  border-radius: 50%;
-  display: inline-block;
-}
-.dot-red {
-  height: 25px;
-  width: 25px;
-  background-color:#fd0202;
-  border-radius: 50%;
-  display: inline-block;
-}
-</style>

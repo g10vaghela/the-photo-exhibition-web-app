@@ -52,7 +52,7 @@ public class ViewerDataHandler {
 		//otp is verified just send child list and advertise list
 		JSONArray responseJsonArray = JSONFactoryUtil.createJSONArray();
 		try {
-			List<AdvertiseInfo> advertiseInfoList = advertiseInfoService.getAdvertiseInfoList();
+			List<AdvertiseInfo> advertiseInfoList = advertiseInfoService.getAdvertiseInfoList(true);
 			List<ChildInfo> childInfoList = childInfoService.getChildInfoList();
 			JSONArray childJsonArray =  JSONFactoryUtil.createJSONArray();
 			JSONObject childJson = JSONFactoryUtil.createJSONObject();
@@ -66,8 +66,12 @@ public class ViewerDataHandler {
 					childJsonArray.put(getJsonByObject(childInfo, false));
 				}
 			}
+			JSONArray advertiseJsonArray = JSONFactoryUtil.createJSONArray();
+			for(AdvertiseInfo advertiseInfo : advertiseInfoList){
+				advertiseJsonArray.put(getJsonByObject(advertiseInfo));
+			}
 			childJson.put(RestConstants.CHILD_INFO, childJsonArray);
-			advertiseJson.put(RestConstants.ADVERTISE_INFO, advertiseInfoList);
+			advertiseJson.put(RestConstants.ADVERTISE_INFO, advertiseJsonArray);
 			viewerInfoJson.put(RestConstants.VIEWER_ID, viewerInfo.getViewerId());
 			viewerInfoJson.put(RestConstants.IS_OTP_VERIFIED, viewerInfo.isOtpVerified());
 			viewerInfoJson.put(RestConstants.MESSAGE, "Viewer Login Successfully");
@@ -83,6 +87,16 @@ public class ViewerDataHandler {
 		}
 		log.debug("END :: ViewerDataHandler.getViewerResponseJson()");
 		return responseJsonArray;
+	}
+	public static JSONObject getJsonByObject(AdvertiseInfo advertiseInfo){
+		log.debug("START :: ViewerDataHandler.getJsonByObject()");
+		JSONObject advertiseJson = JSONFactoryUtil.createJSONObject();
+		advertiseJson.put("advertiseId", advertiseInfo.getAdvertiseId());
+		advertiseJson.put("advertiseName", advertiseInfo.getAdvertiseName());
+		advertiseJson.put("advertisePhotoPath", advertiseInfo.getAdvertisePhotoUrl());
+		advertiseJson.put("activeStatus", advertiseInfo.isActiveStatus());
+		log.debug("END :: ViewerDataHandler.getJsonByObject()");
+		return advertiseJson;
 	}
 
 	public static JSONObject getJsonByObject(ChildInfo childInfo, boolean isLike) throws PortalException {

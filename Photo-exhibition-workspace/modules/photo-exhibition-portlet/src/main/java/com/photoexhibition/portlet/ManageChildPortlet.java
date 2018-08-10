@@ -174,10 +174,10 @@ public class ManageChildPortlet extends MVCPortlet{
 		if(Validator.isNotNull(file)){
 			DLFolder homeDLFolder = null;
 			try {
-				homeDLFolder = FileAndFolderHandler.getDLFolder(FileConstant.HOME_FOLDER_NAME, themeDisplay, parentFolderId);	
+				homeDLFolder = FileAndFolderHandler.getDLFolder(FileConstant.CHILD_HOME_FOLDER_NAME, themeDisplay, parentFolderId);	
 			} catch (Exception e) {
 				log.info("Home Folder Not exist, Now going to create new one");
-				homeDLFolder = FileAndFolderHandler.createDLFolder(actionRequest, themeDisplay, FileConstant.HOME_FOLDER_NAME, "Folder "+FileConstant.HOME_FOLDER_NAME,parentFolderId);
+				homeDLFolder = FileAndFolderHandler.createDLFolder(actionRequest, themeDisplay, FileConstant.CHILD_HOME_FOLDER_NAME, "Folder "+FileConstant.CHILD_HOME_FOLDER_NAME,parentFolderId);
 				log.info("Home Folder created : "+homeDLFolder);
 			}
 			log.info("Home folder :: "+homeDLFolder);

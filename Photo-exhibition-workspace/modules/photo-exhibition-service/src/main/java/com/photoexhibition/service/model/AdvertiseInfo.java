@@ -26,6 +26,17 @@ public class AdvertiseInfo {
 	
 	@Column(name="advertise_status")
 	private boolean activeStatus;
+	
+	@Column(name="photo_orientation", nullable=true)
+	private int orientation;
+
+	public int getOrientation() {
+		return orientation;
+	}
+
+	public void setOrientation(int orientation) {
+		this.orientation = orientation;
+	}
 
 	public long getAdvertiseId() {
 		return advertiseId;
@@ -62,6 +73,6 @@ public class AdvertiseInfo {
 	@Override
 	public String toString() {
 		return "AdvertiseInfo [advertiseId=" + advertiseId + ", advertiseName=" + advertiseName + ", advertisePhotoUrl="
-				+ advertisePhotoUrl + ", activeStatus=" + activeStatus + "]";
+				+ advertisePhotoUrl + ", activeStatus=" + activeStatus + ", orientation=" + orientation + "]";
 	}
 }

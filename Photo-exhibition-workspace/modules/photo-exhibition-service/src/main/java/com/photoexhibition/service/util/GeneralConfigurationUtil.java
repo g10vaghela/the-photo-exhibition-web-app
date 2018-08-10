@@ -3,6 +3,7 @@ package com.photoexhibition.service.util;
 import com.liferay.portal.kernel.util.Validator;
 import com.photoexhibition.service.GeneralConfigurationService;
 import com.photoexhibition.service.constant.GeneralConfigurationConstants;
+import com.photoexhibition.service.dao.GeneralConfigurationDao;
 import com.photoexhibition.service.model.GeneralConfigurationInfo;
 
 public class GeneralConfigurationUtil {
@@ -53,5 +54,17 @@ public class GeneralConfigurationUtil {
 	
 	public static GeneralConfigurationInfo checkLikeServiceOpen() {
 		return getGeneralConfigurationService().getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_LIKE_SERVICE_OPEN);
+	}
+	
+	public static GeneralConfigurationInfo getValidDistanceFromContestLocation(){
+		return getGeneralConfigurationService().getGeneralCongfigurationByKey(GeneralConfigurationConstants.VALID_DISTANCE_FROM_CONTEST_LOCATION);
+	}
+	
+	public static String getContestLocationLatLong(){
+		return getGeneralConfigurationService().getGeneralCongfigurationByKey(GeneralConfigurationConstants.CONTEST_LOCATION_LAT_LONG).getMessage();
+	}
+	
+	public static boolean isLocationTrackingOn(){
+		return Boolean.parseBoolean(getGeneralConfigurationService().getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_LOCATION_TRACKING_ON).getValue());
 	}
 }

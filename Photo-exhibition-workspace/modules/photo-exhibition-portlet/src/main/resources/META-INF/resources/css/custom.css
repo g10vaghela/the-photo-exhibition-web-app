@@ -56,3 +56,20 @@ input:checked+.slider:before {
 .slider.round:before {
 	border-radius: 50%;
 }
+.btn-align-center {
+	margin: 20px 0;
+}
+.dot-green {
+  height: 25px;
+  width: 25px;
+  background-color: #02f320;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot-red {
+  height: 25px;
+  width: 25px;
+  background-color:#fd0202;
+  border-radius: 50%;
+  display: inline-block;
+}
