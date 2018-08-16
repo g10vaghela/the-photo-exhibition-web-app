@@ -1,6 +1,8 @@
 <%@page import="com.photoexhibition.service.model.AdvertiseInfo"%>
 <%@page import="com.photoexhibition.service.model.ChildInfo"%>
 <%@page import="java.util.List"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletMode"%>
 <%@page import="com.photoexhibition.portlet.util.CommonUtil"%>
 <%@include file="../../init.jsp" %>
 
@@ -8,10 +10,13 @@
 
 List<ChildInfo> childList = (List<ChildInfo>) renderRequest.getAttribute("childList");
 AdvertiseInfo advertise = (AdvertiseInfo) renderRequest.getAttribute("advertise");
+
 int currentPageIndex = (int) request.getAttribute("currentPageIndex");
+//int cur = (int) request.getAttribute("cur");
+
 int totalCount = (int) request.getAttribute("totalCount");
-/* get total page
-10/9 + 1 */
+int lastPageIndex = (totalCount/CommonUtil.PAGINATION_PER_PAGE_ITEM)+1;
+boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 %>
 
 <liferay-portlet:renderURL varImpl="iteratorURL">
@@ -69,9 +74,32 @@ int totalCount = (int) request.getAttribute("totalCount");
 </div>
 
 <script type="text/javascript">
+var executeIteratorUrl = function() {
+console.log(" :: executeIteratorUrl :: start ");
+
+var executeFirstPage = <%=isCurrentPageLastPage%>;
+console.log(" ## isCurrentPageLastPage ==> " +executeFirstPage);
+	var renderURL = Liferay.PortletURL.createRenderURL(); // = new Liferay.PortletURL('RENDER_PHASE');
+	renderURL.setWindowState("<%=LiferayWindowState.NORMAL.toString() %>");
+	renderURL.setParameter('mvcPath','/jsp/photo-exhibition/view.jsp');
+	renderURL.setParameter('currentPageIndex',<%= String.valueOf(currentPageIndex) %>);
+	
+	renderURL.setPortletMode("<%=LiferayPortletMode.VIEW %>");
+	renderURL.setPortletId("<%=themeDisplay.getPortletDisplay().getId() %>");
+	if(executeFirstPage) {
+		renderURL.setParameter('cur',1);
+	} else {
+		renderURL.setParameter('cur',<%= String.valueOf(currentPageIndex+1) %>);
+	}
+	window.location = renderURL.toString();
+	// Execute iteration url with help of javascript after every 10 seconds
+	
+};
 	$(document).ready(function() {
 		 
 		console.log(" doc ready... ");
-		// Execute iteration url with help of javascript after every 10 seconds
+		
+		setTimeout( executeIteratorUrl , 15000);
+
 	});
 </script>

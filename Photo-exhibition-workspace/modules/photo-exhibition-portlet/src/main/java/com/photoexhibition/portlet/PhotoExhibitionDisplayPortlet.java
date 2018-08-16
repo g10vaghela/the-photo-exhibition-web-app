@@ -89,6 +89,7 @@ public class PhotoExhibitionDisplayPortlet extends MVCPortlet {
 	
 		renderRequest.setAttribute("childList", childList);
 		renderRequest.setAttribute("advertise", advertiseInfo);
+		//renderRequest.setAttribute("cur", cur);
 		
 		totalCount = childTotalCount; // No need to calculate advertise count - consider only child count
 		SearchContainerUtil.setCommonRenderParameter(renderRequest, childSearchCriteria, totalCount);
