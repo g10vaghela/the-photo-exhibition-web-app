@@ -160,11 +160,11 @@ public class AdvertiseInfoDao extends BaseDao{
 			queryString.append("where (activeStatus =:active or activeStatus =:diactive) ");
 		}
 		
-		if(Validator.isNotNull(advertiseInfoSearchChiteria.getAdvertiseId())) {
+		if(Validator.isNotNull(advertiseInfoSearchChiteria.getAdvertiseId()) && (advertiseInfoSearchChiteria.getAdvertiseId() > 0)) {
 			queryString.append("and advertiseId =:advertiseId ");
 		} 
 		
-		if(Validator.isNotNull(advertiseInfoSearchChiteria.getAdvertiseName())){
+		if(Validator.isNotNull(advertiseInfoSearchChiteria.getAdvertiseName()) && !advertiseInfoSearchChiteria.getAdvertiseName().isEmpty()){
 			queryString.append("and advertiseName =:advertiseName ");
 		}
 
@@ -179,11 +179,11 @@ public class AdvertiseInfoDao extends BaseDao{
 			searchQuery.setParameter("diactive", false);
 		}
 		
-		if(Validator.isNotNull(advertiseInfoSearchChiteria.getAdvertiseId())) {
+		if(Validator.isNotNull(advertiseInfoSearchChiteria.getAdvertiseId()) && (advertiseInfoSearchChiteria.getAdvertiseId() > 0)) {
 			searchQuery.setParameter("advertiseId", advertiseInfoSearchChiteria.getAdvertiseId());
 		} 
 		
-		if(Validator.isNotNull(advertiseInfoSearchChiteria.getAdvertiseName())){
+		if(Validator.isNotNull(advertiseInfoSearchChiteria.getAdvertiseName()) && !advertiseInfoSearchChiteria.getAdvertiseName().isEmpty()){
 			searchQuery.setParameter("advertiseName", advertiseInfoSearchChiteria.getAdvertiseName());
 		}
 		
