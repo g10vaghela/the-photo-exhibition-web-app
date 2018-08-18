@@ -1,3 +1,4 @@
+<%@page import="com.photoexhibition.portlet.vo.PhotoExhbDisplayVo"%>
 <%@page import="com.photoexhibition.service.model.AdvertiseInfo"%>
 <%@page import="com.photoexhibition.service.model.ChildInfo"%>
 <%@page import="java.util.List"%>
@@ -8,12 +9,13 @@
 
 <% 
 
-List<ChildInfo> childList = (List<ChildInfo>) renderRequest.getAttribute("childList");
-AdvertiseInfo advertise = (AdvertiseInfo) renderRequest.getAttribute("advertise");
+//List<ChildInfo> childList = (List<ChildInfo>) renderRequest.getAttribute("childList");
+//AdvertiseInfo advertise = (AdvertiseInfo) renderRequest.getAttribute("advertise");
+List<PhotoExhbDisplayVo> photoExhbDisplayVoList = (List<PhotoExhbDisplayVo>) renderRequest.getAttribute("exhibitionItems");
 
 int currentPageIndex = (int) request.getAttribute("currentPageIndex");
 //int cur = (int) request.getAttribute("cur");
-
+System.out.println(" ###############  currentPageIndex ==> " +currentPageIndex);
 int totalCount = (int) request.getAttribute("totalCount");
 int lastPageIndex = (totalCount/CommonUtil.PAGINATION_PER_PAGE_ITEM)+1;
 boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
@@ -41,31 +43,34 @@ boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 						<liferay-ui:search-container-results>
 						<%	
 							searchContainer.setTotal(totalCount);
-							searchContainer.setResults(childList);
+							searchContainer.setResults(photoExhbDisplayVoList);
+							
 						%>	
 						</liferay-ui:search-container-results>
-						
+							
 						<liferay-ui:search-container-row  indexVar="i"
-							className="com.photoexhibition.service.model.ChildInfo"
-							modelVar="child" >
+							className="com.photoexhibition.portlet.vo.PhotoExhbDisplayVo"
+							modelVar="exhbItem" >
 
-							<div style="width:15%;height:170px;margin:6px;display:inline-block;border: 1px solid #d4d4d4;">
-								<img alt="child-photo" src="<%= child.getPhotoUrl() %>">	
-								<%= child.getFullName() %>	
+				<c:if test="<%=exhbItem.isAdvertise() %>">
+<div style="width:68%;height:370px;margin:6px;display:inline-block;border: 1px solid #d4d4d4;">
+							
+                    			<img alt="advertise-photo" src="<%= exhbItem.getLink() %>">	
+								<%= exhbItem.getName() %>	
 							</div>
+</c:if>
+<c:if test="<%=!exhbItem.isAdvertise() %>">
+							<div style="width:15%;height:170px;margin:6px;display:inline-block;border: 1px solid #d4d4d4;">
 							
-							<%-- <liferay-ui:search-container-column-text name="Actions">
-							
-								<portlet:actionURL name="viewPaySlip" var="viewPaySlipURL">
-									<portlet:param name="paySlipId" value="<%=""+paySlip.getId()%>" />
-								</portlet:actionURL>
-
-								<a href="javascript:viewPaySlip('<%=viewPaySlipURL.toString()%>');"><img src="<%=request.getContextPath()%>/images/icon-view.png" message="View"  alt="view" ></a>
-							
-							</liferay-ui:search-container-column-text> --%>
+                    			<img alt="child-photo" src="<%= exhbItem.getLink() %>">	
+								<%= exhbItem.getName() %>	
+							</div>
+					</c:if>
 						</liferay-ui:search-container-row >
 						
-						<liferay-ui:search-iterator searchContainer="<%=searchContainer%>" markupView="lexicon"/>
+						
+						 <liferay-ui:search-paginator type="article" searchContainer="<%=searchContainer%>"></liferay-ui:search-paginator> 
+						<%-- <liferay-ui:search-iterator displayStyle="descriptive" searchContainer="<%=searchContainer%>" markupView="lexicon"/> --%>
 						
 					</liferay-ui:search-container>
 			</div>

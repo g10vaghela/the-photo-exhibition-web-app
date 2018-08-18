@@ -1,6 +1,7 @@
 package com.photoexhibition.portlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.portlet.Portlet;
@@ -17,6 +18,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.photoexhibition.portlet.constants.ControllerPortletKeys;
 import com.photoexhibition.portlet.search.criteria.util.SearchContainerUtil;
 import com.photoexhibition.portlet.util.CommonUtil;
+import com.photoexhibition.portlet.vo.PhotoExhbDisplayVo;
 import com.photoexhibition.service.AdvertiseInfoService;
 import com.photoexhibition.service.ChildInfoService;
 import com.photoexhibition.service.model.AdvertiseInfo;
@@ -85,16 +87,47 @@ public class PhotoExhibitionDisplayPortlet extends MVCPortlet {
 		advertiseSC.setPaginationDelta(1);
 		advertiseSC.setPaginationPage(currentPageIndex);
 		*/
-		AdvertiseInfo advertiseInfo = advertiseInfoService.getAdvertiseInfoById(currentPageIndex);
+		AdvertiseInfo advertise = advertiseInfoService.getAdvertiseInfoById(currentPageIndex);
 	
+		List<PhotoExhbDisplayVo> exhibitionItems = new ArrayList<PhotoExhbDisplayVo>();
+		setExhibitionItems(exhibitionItems, childList, advertise);
 		renderRequest.setAttribute("childList", childList);
-		renderRequest.setAttribute("advertise", advertiseInfo);
+		renderRequest.setAttribute("advertise", advertise);
+		renderRequest.setAttribute("exhibitionItems", exhibitionItems);
 		//renderRequest.setAttribute("cur", cur);
-		
+		log.info(" ###############  currentPageIndex ==> " +currentPageIndex);
 		totalCount = childTotalCount; // No need to calculate advertise count - consider only child count
 		SearchContainerUtil.setCommonRenderParameter(renderRequest, childSearchCriteria, totalCount);
 		super.render(renderRequest, renderResponse);
 	}
 
-	
+	private void setExhibitionItems(List<PhotoExhbDisplayVo> exhibitionItems, List<ChildInfo> childList, AdvertiseInfo advertise) {
+		log.info(" :: setExhibitionItems :: ");
+		if(childList != null) {
+			//log.info(" :: childList != null :: ");
+			for(int i =0; i<(childList.size()); i++) {
+			//	log.info(" 1 set vo " +i);
+				PhotoExhbDisplayVo photoExhbDisplayVo = new PhotoExhbDisplayVo();
+				
+					ChildInfo child = childList.get(i);
+					if(child !=null) {
+						photoExhbDisplayVo.setAdvertise(false);
+						photoExhbDisplayVo.setId(child.getChildId());
+						photoExhbDisplayVo.setLink(child.getPhotoUrl());
+						photoExhbDisplayVo.setName(child.getFullName());
+					}
+				
+			//	log.info("2  set vo " +i);
+				exhibitionItems.add(photoExhbDisplayVo);
+			}
+			PhotoExhbDisplayVo photoExhbDisplayVo = new PhotoExhbDisplayVo();
+			if(advertise !=null) {
+				photoExhbDisplayVo.setAdvertise(true);
+				photoExhbDisplayVo.setId(advertise.getAdvertiseId());
+				photoExhbDisplayVo.setLink(advertise.getAdvertisePhotoUrl());
+				photoExhbDisplayVo.setName(advertise.getAdvertiseName());
+			}
+			exhibitionItems.add(7, photoExhbDisplayVo);
+		}
+	}
 }
