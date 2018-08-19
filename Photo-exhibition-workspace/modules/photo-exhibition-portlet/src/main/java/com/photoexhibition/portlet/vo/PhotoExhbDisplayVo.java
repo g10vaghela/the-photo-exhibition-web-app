@@ -1,12 +1,30 @@
 package com.photoexhibition.portlet.vo;
 
+import com.photoexhibition.service.model.AdvertiseInfo;
+import com.photoexhibition.service.model.ChildInfo;
+
 public class PhotoExhbDisplayVo {
 
+	private ChildInfo childInfo;
+	private AdvertiseInfo advertise;
 	private long id;
 	private String name;
 	private String link;
 	private boolean isAdvertise;
+	private int orientation;
 
+	public ChildInfo getChildInfo() {
+		return childInfo;
+	}
+	public void setChildInfo(ChildInfo childInfo) {
+		this.childInfo = childInfo;
+	}
+	public AdvertiseInfo getAdvertise() {
+		return advertise;
+	}
+	public void setAdvertise(AdvertiseInfo advertise) {
+		this.advertise = advertise;
+	}
 	public long getId() {
 		return id;
 	}
@@ -30,5 +48,11 @@ public class PhotoExhbDisplayVo {
 	}
 	public void setAdvertise(boolean isAdvertise) {
 		this.isAdvertise = isAdvertise;
+	}
+	public int getOrientation() {
+		return orientation;
+	}
+	public void setOrientation(int orientation) {
+		this.orientation = orientation;
 	}
 }

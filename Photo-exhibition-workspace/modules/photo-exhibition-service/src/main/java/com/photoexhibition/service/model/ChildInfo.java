@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.liferay.portal.kernel.util.StringPool;
 
@@ -50,6 +51,9 @@ public class ChildInfo {
 	@Temporal(TemporalType.DATE)
 	@Column(name="date_of_birth", nullable = true)
 	private Date dateOfBirth;
+
+	@Transient
+	private int totalLike;
 
 	public int getOrientation() {
 		return orientation;
@@ -139,6 +143,14 @@ public class ChildInfo {
 
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public int getTotalLike() {
+		return totalLike;
+	}
+
+	public void setTotalLike(int totalLike) {
+		this.totalLike = totalLike;
 	}
 
 	@Override

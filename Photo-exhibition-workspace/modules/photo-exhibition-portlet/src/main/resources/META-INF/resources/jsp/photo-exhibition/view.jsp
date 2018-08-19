@@ -1,3 +1,4 @@
+<%@page import="com.photoexhibition.service.util.PhotoOrientation"%>
 <%@page import="com.photoexhibition.portlet.vo.PhotoExhbDisplayVo"%>
 <%@page import="com.photoexhibition.service.model.AdvertiseInfo"%>
 <%@page import="com.photoexhibition.service.model.ChildInfo"%>
@@ -8,8 +9,8 @@
 <%@include file="../../init.jsp" %>
 
 <% 
-//List<ChildInfo> childList = (List<ChildInfo>) renderRequest.getAttribute("childList");
-//AdvertiseInfo advertise = (AdvertiseInfo) renderRequest.getAttribute("advertise");
+AdvertiseInfo advertise = null;
+ChildInfo child = null;
 List<PhotoExhbDisplayVo> photoExhbDisplayVoList = (List<PhotoExhbDisplayVo>) renderRequest.getAttribute("exhibitionItems");
 
 int currentPageIndex = (int) request.getAttribute("currentPageIndex");
@@ -49,26 +50,34 @@ boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 								className="com.photoexhibition.portlet.vo.PhotoExhbDisplayVo"
 								modelVar="exhbItem" >
 
-								<c:if test="${((i == 0) || (i==6) || (i==9) || (i==11))}">
+								<c:if test="${((i == 0) || (i==5) || (i==8) || (i==10))}">
 									<tr>	
 								</c:if>
+								<c:if test="<%=!exhbItem.isAdvertise() %>">
+									<% child = exhbItem.getChildInfo(); %>
+									<td class="common-cell child-cell">
+										<div style="padding:5px;">
+											<c:choose>
+												<c:when  test="<%=child.getOrientation() == PhotoOrientation.LANDSCAPE.getValue() %>">
+													<img src="<%=child.getPhotoUrl() %>" alt='<%="image of "+child.getFullName() %>' width="350" height="250"/>
+												</c:when>
+												<c:otherwise>
+													<img src="<%=child.getPhotoUrl() %>" alt='<%="image of "+child.getFullName() %>' width="250" height="350"/>
+												</c:otherwise>
+											</c:choose>
+										</div>
+										<div class="child-details-wrapper"><span class="child-details"> <%= child.getChildId() +" - " +child.getFullName()  %> </span></div>
+									</td>		
+								</c:if>
 								<c:if test="<%=exhbItem.isAdvertise() %>">
-									<td class="common-cell advertise-cell" colspan="4" rowspan="2">
+									<% advertise = exhbItem.getAdvertise(); %>
+									<td class="common-cell advertise-cell" colspan="3" rowspan="2">
 										<div style="">
-		                    				<img alt="advertise-photo" src="<%= exhbItem.getLink() %>">	
-											<%= exhbItem.getName() %>	
+		                    				<img alt="<%= advertise.getAdvertiseName() %>" src="<%= advertise.getAdvertisePhotoUrl() %>">
 										</div>
 									</td>
 								</c:if>
-								<c:if test="<%=!exhbItem.isAdvertise() %>">
-									<td class="common-cell child-cell">
-										<div>
-			                    			<img alt="child-photo" src="<%= exhbItem.getLink() %>">	
-											<%= exhbItem.getName() %>	
-										</div>
-									</td>		
-								</c:if>
-								<c:if test="${((i == 5) || (i==8) || (i==10) || (i==(totalCount+1)) )}">
+								<c:if test="${((i == 4) || (i==7) || (i==9) || (i==(totalCount+1)) )}">
 									</tr>
 								</c:if>
 
@@ -105,6 +114,6 @@ boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 
 	$(document).ready(function() {
 		console.log(" doc ready... ");
-		setTimeout( executeIteratorUrl , 15000);
+		//setTimeout( executeIteratorUrl , 15000);
 	});
 </script>

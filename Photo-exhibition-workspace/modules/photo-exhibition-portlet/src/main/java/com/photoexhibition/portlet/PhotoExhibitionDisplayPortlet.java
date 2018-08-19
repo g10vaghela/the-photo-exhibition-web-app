@@ -3,6 +3,7 @@ package com.photoexhibition.portlet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
@@ -21,6 +22,7 @@ import com.photoexhibition.portlet.util.CommonUtil;
 import com.photoexhibition.portlet.vo.PhotoExhbDisplayVo;
 import com.photoexhibition.service.AdvertiseInfoService;
 import com.photoexhibition.service.ChildInfoService;
+import com.photoexhibition.service.ChildViewerLikeInfoService;
 import com.photoexhibition.service.model.AdvertiseInfo;
 import com.photoexhibition.service.model.ChildInfo;
 import com.photoexhibition.service.search.criteria.AdvertiseInfoSearchChiteria;
@@ -53,6 +55,7 @@ public class PhotoExhibitionDisplayPortlet extends MVCPortlet {
 	
 	private static ChildInfoService childInfoService = BeanLocalServiceUtil.getChildInfoService();
 	private static AdvertiseInfoService advertiseInfoService = BeanLocalServiceUtil.getAdvertiseInfoService();
+	private static ChildViewerLikeInfoService childViewerLikeInfoService = BeanLocalServiceUtil.getChildViewerLikeInfoService(); 
 	
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
@@ -83,41 +86,47 @@ public class PhotoExhibitionDisplayPortlet extends MVCPortlet {
 		childSearchCriteria.setPaginationDelta(delta);
 		childSearchCriteria.setPaginationPage(currentPageIndex);
 		List<ChildInfo> childList = childInfoService.getChildInfoList(childSearchCriteria);
-		
-		AdvertiseInfo advertise = advertiseInfoService.getAdvertiseInfoById(currentPageIndex);
-	
+
 		List<PhotoExhbDisplayVo> exhibitionItems = new ArrayList<PhotoExhbDisplayVo>();
-		setExhibitionItems(exhibitionItems, childList, advertise);
-		renderRequest.setAttribute("childList", childList);
-		renderRequest.setAttribute("advertise", advertise);
+		setExhibitionItems(exhibitionItems, childList);
+		
 		renderRequest.setAttribute("exhibitionItems", exhibitionItems);
-		//renderRequest.setAttribute("cur", cur);
 		totalCount = childTotalCount; // No need to calculate advertise count - consider only child count
 		SearchContainerUtil.setCommonRenderParameter(renderRequest, childSearchCriteria, totalCount);
 	}
 
-	private void setExhibitionItems(List<PhotoExhbDisplayVo> exhibitionItems, List<ChildInfo> childList, AdvertiseInfo advertise) {
+	private AdvertiseInfo getRandomAdvertise() {
+		AdvertiseInfo advertise = null;
+		List<AdvertiseInfo> advertiseList = advertiseInfoService.getAdvertiseInfoList(true);
+
+		if((advertiseList != null) && (advertiseList.size() > 0)) {
+			Random rand = new Random();
+			int index = rand.nextInt(advertiseList.size());
+			advertise = advertiseList.get(index);
+		}
+		return advertise;
+	}
+
+	private void setExhibitionItems(List<PhotoExhbDisplayVo> exhibitionItems, List<ChildInfo> childList) {
 		log.info(" :: setExhibitionItems :: ");
 		if(childList != null) {
 			for(int i =0; i<(childList.size()); i++) {
 				PhotoExhbDisplayVo photoExhbDisplayVo = new PhotoExhbDisplayVo();
 				ChildInfo child = childList.get(i);
 				if(child !=null) {
-					photoExhbDisplayVo.setAdvertise(false);
-					photoExhbDisplayVo.setId(child.getChildId());
-					photoExhbDisplayVo.setLink(child.getPhotoUrl());
-					photoExhbDisplayVo.setName(child.getFullName());
+					//childViewerLikeInfoService.getChildViewerLikeInfoListByChildId(childId).getChildId()
+					//childInfoService.
+					photoExhbDisplayVo.setChildInfo(child);
 				}
 				exhibitionItems.add(photoExhbDisplayVo);
 			}
 			PhotoExhbDisplayVo photoExhbDisplayVo = new PhotoExhbDisplayVo();
+			AdvertiseInfo advertise = getRandomAdvertise();
 			if(advertise !=null) {
 				photoExhbDisplayVo.setAdvertise(true);
-				photoExhbDisplayVo.setId(advertise.getAdvertiseId());
-				photoExhbDisplayVo.setLink(advertise.getAdvertisePhotoUrl());
-				photoExhbDisplayVo.setName(advertise.getAdvertiseName());
+				photoExhbDisplayVo.setAdvertise(advertise);
 			}
-			exhibitionItems.add(7, photoExhbDisplayVo);
+			exhibitionItems.add(6, photoExhbDisplayVo);
 		}
 	}
 }
