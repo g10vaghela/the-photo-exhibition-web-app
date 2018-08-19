@@ -109,9 +109,11 @@ public class PhotoExhibitionRestControllerApplication extends Application {
 				responseJsonObject.put(RestConstants.DATA, ContestUtil.checkContestOpen());
 			} else {
 				JSONObject contestJsonObject = JSONFactoryUtil.createJSONObject();
+				JSONArray wrapperArray = JSONFactoryUtil.createJSONArray();
 				contestJsonObject.put(RestConstants.IS_CONTEST_OPEN, false);
 				contestJsonObject.put(RestConstants.MESSAGE, generalConfigurationInfo.getMessage());
-				responseJsonObject.put(RestConstants.DATA, contestJsonObject);
+				wrapperArray.put(contestJsonObject);
+				responseJsonObject.put(RestConstants.DATA, wrapperArray);
 			}
 		} catch (Exception e) {
 			log.error("Error ::"+e);
@@ -239,11 +241,13 @@ public class PhotoExhibitionRestControllerApplication extends Application {
 		log.debug("START :: PhotoExhibitionRestControllerApplication.getDataAfterOtpVerification()");
 		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
 		try {
+			System.out.println("viewerInfo:"+viewerInfo);
 			JSONObject viewerJsonObject = JSONFactoryUtil.createJSONObject(viewerInfo);
-			long viewerId = viewerJsonObject.getLong(RestConstants.VIEWER_ID);
+			String viewerIdStr = viewerJsonObject.getString("viewerInfo");
+			long viewerId = Long.parseLong(viewerIdStr);
 			log.info("viewerId :: "+viewerId);
 			responseJsonObject.put(RestConstants.STATUS_CODE, HttpStatus.OK.value());
-			responseJsonObject.put(RestConstants.DATA, ViewerDataHandler.getViewerData(viewerId));	
+			responseJsonObject.put(RestConstants.DATA, ViewerDataHandler.getViewerData(viewerId));
 		} catch (Exception e) {
 			log.error("Error ::"+e);
 			e.printStackTrace();

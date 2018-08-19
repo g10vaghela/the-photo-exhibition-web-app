@@ -174,7 +174,7 @@ public class AdvertiseControllerPortlet extends MVCPortlet{
 		ThemeDisplay themeDisplay = CommonUtil.getThemeDisplay(actionRequest);
 		log.info("File to upload :: "+file.getName());
 		if(Validator.isNotNull(file)){
-			DLFolder homeDLFolder = null;
+			/*DLFolder homeDLFolder = null;
 			try {
 				homeDLFolder = FileAndFolderHandler.getDLFolder(FileConstant.ADVERTISE_HOME_FOLDER_NAME, themeDisplay, parentFolderId);	
 			} catch (Exception e) {
@@ -202,7 +202,10 @@ public class AdvertiseControllerPortlet extends MVCPortlet{
 				advertiseInfo.setAdvertisePhotoUrl(photoLink);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
+			}*/
+			
+			String path = FileAndFolderHandler.uploadFile(themeDisplay, file, "advertise_photo/"+String.valueOf(advertiseInfo.getAdvertiseId()));
+			advertiseInfo.setAdvertisePhotoUrl(path);
 		} else {
 			advertiseInfo.setAdvertisePhotoUrl(null);
 			SessionErrors.add(actionRequest, MessageConstant.ADVERTISEMENT_SAVE_OR_UPDATE_ERROR_MESSAGE);

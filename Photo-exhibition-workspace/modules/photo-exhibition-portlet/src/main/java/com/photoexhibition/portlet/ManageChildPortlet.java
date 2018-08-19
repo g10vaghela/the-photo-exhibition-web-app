@@ -172,7 +172,7 @@ public class ManageChildPortlet extends MVCPortlet{
 		ThemeDisplay themeDisplay = CommonUtil.getThemeDisplay(actionRequest);
 		log.info("File to upload :: "+file.getName());
 		if(Validator.isNotNull(file)){
-			DLFolder homeDLFolder = null;
+			/*DLFolder homeDLFolder = null;
 			try {
 				homeDLFolder = FileAndFolderHandler.getDLFolder(FileConstant.CHILD_HOME_FOLDER_NAME, themeDisplay, parentFolderId);	
 			} catch (Exception e) {
@@ -200,7 +200,9 @@ public class ManageChildPortlet extends MVCPortlet{
 				childInfo.setPhotoUrl(photoLink);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
+			}*/
+			String path = FileAndFolderHandler.uploadFile(themeDisplay, file, "child_image/"+String.valueOf(childInfo.getChildId()));
+			childInfo.setPhotoUrl(path);
 		} else {
 			childInfo.setPhotoUrl(null);
 			SessionErrors.add(actionRequest, MessageConstant.CHILD_PHOTO_SAVE_OR_UPDATE_ERROR_MESSAGE);
@@ -257,6 +259,7 @@ public class ManageChildPortlet extends MVCPortlet{
 		String dateOfBirth = actionRequest.getParameter("dateOfBirth");
 		String isChildActive = actionRequest.getParameter("isChildActive");
 		String fileUpload = actionRequest.getParameter("fileUpload");
+		String orientation = actionRequest.getParameter("orientation");
 		
 		System.out.println("firstName ::"+firstName);
 		System.out.println("middleName ::"+middleName);
@@ -265,25 +268,33 @@ public class ManageChildPortlet extends MVCPortlet{
 		System.out.println("dateOfBirth ::"+dateOfBirth);
 		System.out.println("isChildActive ::"+isChildActive);
 		System.out.println("fileUpload :: "+fileUpload);
+		System.out.println("orientation :: "+orientation);
 		try {
 			if(ChildInfoValidator.isValidChildInfo(firstName, middleName, lastName, contactNo, dateOfBirth)){
-				ChildInfo childInfo = new ChildInfo();
-				childInfo.setChildId(Long.parseLong(childId));
-				childInfo.setFirstName(firstName);
-				childInfo.setMiddleName(middleName);
-				childInfo.setLastName(lastName);
-				childInfo.setContactNo(contactNo);
-				childInfo.setDateOfBirth(simpleDateFormat.parse(dateOfBirth));
-				if(Validator.isNotNull(isChildActive)) {
-					childInfo.setStatus(true);
+				ChildInfo childInfo = childInfoService.getChildInfoById(Long.parseLong(childId));
+				if(Validator.isNotNull(childInfo)){
+					System.out.println("childInfo :: "+childInfo);
+					childInfo.setFirstName(firstName);
+					childInfo.setMiddleName(middleName);
+					childInfo.setLastName(lastName);
+					childInfo.setContactNo(contactNo);
+					childInfo.setDateOfBirth(simpleDateFormat.parse(dateOfBirth));
+					if(Validator.isNotNull(isChildActive)) {
+						childInfo.setStatus(true);
+					} else {
+						childInfo.setStatus(false);
+					}
+					childInfo.setOrientation(Integer.parseInt(orientation));
+					System.out.println("childInfo.getPhotoUrl() :: "+childInfo.getPhotoUrl());
+					if(Validator.isNull(childInfo.getPhotoUrl())){
+						uploadFileForChild(actionRequest,childInfo);
+					}
+					childInfoService.saveOrUpdate(childInfo);
+					SessionMessages.add(actionRequest, MessageConstant.CHILD_INFO_SAVE_OR_UPDATE_SUCCESS_MESSAGE);
 				} else {
-					childInfo.setStatus(false);
+					log.error("Child Info not found with id :"+childId);
+					SessionErrors.add(actionRequest, MessageConstant.CHILD_INFO_SAVE_OR_UPDATE_ERROR_MESSAGE);
 				}
-				if(Validator.isNull(childInfo.getPhotoUrl())){
-					uploadFileForChild(actionRequest,childInfo);
-				}
-				childInfoService.saveOrUpdate(childInfo);
-				SessionMessages.add(actionRequest, MessageConstant.CHILD_INFO_SAVE_OR_UPDATE_SUCCESS_MESSAGE);
 			} else {
 				log.error("Validation Fail");
 				SessionErrors.add(actionRequest, MessageConstant.SERVER_SIDE_VALIDATION_FAIL_ERROR_MESSAGE);

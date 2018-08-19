@@ -10,6 +10,7 @@ import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.poi.util.SystemOutLogger;
 import org.omg.CORBA.Request;
 import org.osgi.service.component.annotations.Component;
 
@@ -53,11 +54,22 @@ public class GeneralConfigurationPortlet extends MVCPortlet {
 		GeneralConfigurationInfo contestConfigurationInfo= GeneralConfigurationUtil.isContestOpenConfiguration();
 		//GeneralConfigurationInfo otpConfigurationInfo= generalConfigurationService.getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_OTP_SERVICE_ON);				
 		GeneralConfigurationInfo otpConfigurationInfo= GeneralConfigurationUtil.isOtpServiceOn();
+		GeneralConfigurationInfo validDistanceConfiguration = GeneralConfigurationUtil.getValidDistanceFromContestLocation();
+		GeneralConfigurationInfo likeServiceGeneralConfig = GeneralConfigurationUtil.checkLikeServiceOpen();
+		String  contestLocationLatLong = GeneralConfigurationUtil.getContestLocationLatLong();
+		boolean isLocationTrackingOn = GeneralConfigurationUtil.isLocationTrackingOn();
+		int minimumRequiredLike = GeneralConfigurationUtil.getMinimumLikeRequired();
 		renderRequest.setAttribute("contestConfigurationInfo", contestConfigurationInfo);
 		renderRequest.setAttribute("otpConfigurationInfo", otpConfigurationInfo);
+		renderRequest.setAttribute("validDistanceConfiguration", validDistanceConfiguration);
+		renderRequest.setAttribute("likeServiceGeneralConfig", likeServiceGeneralConfig);
+		renderRequest.setAttribute("contestLocationLatLong", contestLocationLatLong);
+		renderRequest.setAttribute("isLocationTrackingOn", isLocationTrackingOn);
+		renderRequest.setAttribute("minimumRequiredLike", minimumRequiredLike);
+		
 		super.render(renderRequest, renderResponse);
 	}
-	
+
 	@ProcessAction(name="updateContestConfig")
 	public void updateContestConfig(ActionRequest actionRequest, ActionResponse actionResponse) {
 		log.info("START :: GeneralConfigurationPortlet.updateContestConfig()");
@@ -83,7 +95,7 @@ public class GeneralConfigurationPortlet extends MVCPortlet {
 		}
 		log.info("END :: GeneralConfigurationPortlet.updateContestConfig()");
 	}
-	
+
 	@ProcessAction(name="updateOtpConfig")
 	public void updateOtpConfig(ActionRequest actionRequest, ActionResponse actionResponse) {
 		log.info("START :: GeneralConfigurationPortlet.updateOtpConfig()");
@@ -104,5 +116,88 @@ public class GeneralConfigurationPortlet extends MVCPortlet {
 			SessionErrors.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_ERROR_MESSAGE);
 		}
 		log.info("END :: GeneralConfigurationPortlet.updateOtpConfig()");
+	}
+
+	@ProcessAction(name="validDistanceConfigurationUpdate")
+	public void validDistanceConfigurationUpdate(ActionRequest actionRequest, ActionResponse actionResponse){
+		log.info("START :: GeneralConfigurationPortlet.validDistanceConfigurationUpdate()");
+		String validDistance = actionRequest.getParameter("validDistance");
+		try {
+			log.info("validDistance ::"+validDistance);
+			if(Validator.isNotNull(validDistance)){
+				GeneralConfigurationInfo generalConfigurationInfo = new GeneralConfigurationInfo();
+				generalConfigurationInfo.setKey(GeneralConfigurationConstants.VALID_DISTANCE_FROM_CONTEST_LOCATION);
+				generalConfigurationInfo.setValue(validDistance);
+				generalConfigurationService.saveOrUpdate(generalConfigurationInfo);
+				SessionMessages.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_SUCCESS_MESSAGE);
+			}
+		} catch (Exception e) {
+			log.error("Error ::"+e);
+			SessionErrors.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_ERROR_MESSAGE);
+		}
+		log.info("END :: GeneralConfigurationPortlet.validDistanceConfigurationUpdate()");
+	}
+
+	@ProcessAction(name="likeServiceConfigurationUpdate")
+	public void likeServiceConfigurationUpdate(ActionRequest actionRequest, ActionResponse actionResponse){
+		log.info("START :: GeneralConfigurationPortlet.likeServiceConfigurationUpdate()");
+		String likeService = actionRequest.getParameter("like-service-switch");
+		String configMessage = actionRequest.getParameter("likeConfigMessage");
+		try {
+			GeneralConfigurationInfo generalConfigurationInfo = new GeneralConfigurationInfo();
+			generalConfigurationInfo.setKey(GeneralConfigurationConstants.IS_LIKE_SERVICE_OPEN);
+			if(Validator.isNotNull(likeService)){
+				generalConfigurationInfo.setValue("true");
+			} else {
+				generalConfigurationInfo.setValue("false");
+			}
+			generalConfigurationInfo.setMessage(configMessage);
+			generalConfigurationService.saveOrUpdate(generalConfigurationInfo);
+			SessionMessages.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_SUCCESS_MESSAGE);
+		} catch (Exception e) {
+			log.error("Error ::"+e);
+			SessionErrors.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_ERROR_MESSAGE);
+		}
+		log.info("END :: GeneralConfigurationPortlet.likeServiceConfigurationUpdate()");
+	}
+
+	@ProcessAction(name="locationLatLongUpdate")
+	public void locationLatLongUpdate(ActionRequest actionRequest, ActionResponse actionResponse){
+		log.info("START :: GeneralConfigurationPortlet.locationLatLongUpdate()");
+		String latitude = actionRequest.getParameter("locationLatitude");
+		String longitude = actionRequest.getParameter("locationLongitude");
+		log.info("latitude ::"+latitude);
+		log.info("longitude ::"+longitude);
+		try {
+			String configMessage = "{\"latitude\":\""+latitude+"\",\"longitude\":\""+longitude+"\"}";
+			System.out.println("configMessage ::"+configMessage);
+			GeneralConfigurationInfo generalConfigurationInfo = new GeneralConfigurationInfo();
+			generalConfigurationInfo.setKey(GeneralConfigurationConstants.CONTEST_LOCATION_LAT_LONG);
+			generalConfigurationInfo.setMessage(configMessage);
+			generalConfigurationService.saveOrUpdate(generalConfigurationInfo);
+			SessionMessages.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_SUCCESS_MESSAGE);
+		} catch (Exception e) {
+			log.error("Error : "+e);
+			SessionErrors.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_ERROR_MESSAGE);
+		}
+		log.info("END :: GeneralConfigurationPortlet.locationLatLongUpdate()");
+	}
+
+	@ProcessAction(name="minimumLikeRequired")
+	public void minimumLikeRequired(ActionRequest actionRequest, ActionResponse actionResponse){
+		log.info("START :: GeneralConfigurationPortlet.minimumLikeRequired()");
+		String minimumRequiredLike = actionRequest.getParameter("minimumLikeRequired");
+		log.info("minimumRequiredLike :: "+minimumRequiredLike);
+		try {
+			GeneralConfigurationInfo generalConfigurationInfo = new GeneralConfigurationInfo();
+			generalConfigurationInfo.setKey(GeneralConfigurationConstants.MINIMUM_LIKE_REQUIRED);
+			generalConfigurationInfo.setValue(minimumRequiredLike);
+			generalConfigurationService.saveOrUpdate(generalConfigurationInfo);
+			SessionMessages.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_SUCCESS_MESSAGE);
+		} catch (Exception e) {
+			log.error("Error : "+e);
+			SessionErrors.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_ERROR_MESSAGE);
+		}
+		log.info("END :: GeneralConfigurationPortlet.minimumLikeRequired()");
 	}
 }

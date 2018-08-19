@@ -19,6 +19,7 @@ import com.photoexhibition.service.model.ChildInfo;
 import com.photoexhibition.service.model.ChildViewerLikeInfo;
 import com.photoexhibition.service.model.ViewerInfo;
 import com.photoexhibition.service.util.BeanLocalServiceUtil;
+import com.photoexhibition.service.util.GeneralConfigurationUtil;
 import com.photoexhibition.service.util.LoginResponseCode;
 
 public class ViewerDataHandler {
@@ -70,11 +71,15 @@ public class ViewerDataHandler {
 			for(AdvertiseInfo advertiseInfo : advertiseInfoList){
 				advertiseJsonArray.put(getJsonByObject(advertiseInfo));
 			}
+			List<ChildViewerLikeInfo> childViewerLikeInfoList = childViewerLikeInfoService.getChildViewerLikeInfoListByViewerId(viewerInfo.getViewerId());
+			log.info("childViewerLikeInfoList size  :"+childViewerLikeInfoList.size());
 			childJson.put(RestConstants.CHILD_INFO, childJsonArray);
 			advertiseJson.put(RestConstants.ADVERTISE_INFO, advertiseJsonArray);
 			viewerInfoJson.put(RestConstants.VIEWER_ID, viewerInfo.getViewerId());
 			viewerInfoJson.put(RestConstants.IS_OTP_VERIFIED, viewerInfo.isOtpVerified());
 			viewerInfoJson.put(RestConstants.MESSAGE, "Viewer Login Successfully");
+			viewerInfoJson.put(RestConstants.TOTAL_LIKE, childViewerLikeInfoList.size());
+			viewerInfoJson.put(RestConstants.MINIMUM_LIKE_REQUIRED,GeneralConfigurationUtil.getMinimumLikeRequired());
 			viewerInfoJson.put(RestConstants.RESPONSE_CODE, LoginResponseCode.SUCCESS.getValue());
 			JSONObject viewerJsonWrapper = JSONFactoryUtil.createJSONObject();
 			viewerJsonWrapper.put(RestConstants.VIEWER_INFO, viewerInfoJson);

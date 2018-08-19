@@ -67,4 +67,8 @@ public class GeneralConfigurationUtil {
 	public static boolean isLocationTrackingOn(){
 		return Boolean.parseBoolean(getGeneralConfigurationService().getGeneralCongfigurationByKey(GeneralConfigurationConstants.IS_LOCATION_TRACKING_ON).getValue());
 	}
+	
+	public static int getMinimumLikeRequired(){
+		return Integer.parseInt(getGeneralConfigurationService().getGeneralCongfigurationByKey(GeneralConfigurationConstants.MINIMUM_LIKE_REQUIRED).getValue());
+	}
 }

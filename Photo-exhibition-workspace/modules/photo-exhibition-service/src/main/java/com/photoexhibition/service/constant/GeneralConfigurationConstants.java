@@ -16,4 +16,5 @@ public class GeneralConfigurationConstants {
 	public static final String VALID_DISTANCE_FROM_CONTEST_LOCATION = "VALID_DISTANCE_FROM_CONTEST_LOCATION";// msg = Sorry, Like service is closed -->> value=false
 	public static final String CONTEST_LOCATION_LAT_LONG = "CONTEST_LOCATION_LAT_LONG";// msg = Sorry, Like service is closed -->> value=false
 	public static final String IS_LOCATION_TRACKING_ON = "IS_LOCATION_TRACKING_ON";// msg = Sorry, Like service is closed -->> value=false
+	public static final String MINIMUM_LIKE_REQUIRED = "MINIMUM_LIKE_REQUIRED";// msg = Sorry, Like service is closed -->> value=false
 }

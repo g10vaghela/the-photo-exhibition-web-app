@@ -98,10 +98,11 @@ public class ChildViewerLikeInfoDao extends BaseDao{
 		Session session = getSession();
 		Transaction transaction = session.getTransaction();
 		try {
-			String queryString = "from ChildViewerLikeInfo cvli where cvli.viewerInfo.viewerId =:viewerId";
+			String queryString = "from ChildViewerLikeInfo cvli where cvli.viewerInfo.viewerId =:viewerId and cvli.isLike=:isLike";
 			transaction.begin();
 			Query query = session.createQuery(queryString);
 			query.setParameter("viewerId", viewerId);
+			query.setParameter("isLike", true);
 			childViewerLikeInfoList = query.list();
 			transaction.commit();
 		} catch (Exception e) {

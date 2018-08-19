@@ -1,5 +1,6 @@
 package com.photoexhibition.rest.util;
 
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
@@ -24,7 +25,7 @@ public class LikeHandler {
 	private static ViewerInfoService viewerInfoService = BeanLocalServiceUtil.getViewerInfoService();
 	private static ChildInfoService childInfoService = BeanLocalServiceUtil.getChildInfoService();
 	
-	public static JSONObject manageLike(long childId, long viewerId, boolean isLiked) {
+	public static JSONArray manageLike(long childId, long viewerId, boolean isLiked) {
 		log.debug("START :: LikeHandler.manageLike()");
 		JSONObject responseJsonObject = JSONFactoryUtil.createJSONObject();
 		try {
@@ -39,14 +40,22 @@ public class LikeHandler {
 					ViewerInfo viewerInfo = viewerInfoService.getViewerInfoById(viewerId);
 					if(Validator.isNotNull(viewerInfo)) {
 						log.info("Viewer found with given viewer id");
-						ChildViewerLikeInfo childViewerLikeInfo = new ChildViewerLikeInfo();
-						childViewerLikeInfo.setLike(isLiked);
-						childViewerLikeInfo.setChildInfo(childInfo);
-						childViewerLikeInfo.setViewerInfo(viewerInfo);
-						childViewerLikeInfoService.saveOrUpdate(childViewerLikeInfo);
-						log.info("Child Viewer like saved successfully");
-						responseJsonObject.put(RestConstants.MESSAGE, "You liked :"+childInfo.getFirstName());
-						responseJsonObject.put(RestConstants.IS_LIKE, true);
+						ChildViewerLikeInfo childViewerLikeInfo1 = childViewerLikeInfoService.getChildViewerLikeInfoByChildAndViewerId(childId, viewerId);
+						if(Validator.isNull(childViewerLikeInfo1)){
+							log.info("Like Not found by viewer :"+viewerId+" for child :"+childId);
+							ChildViewerLikeInfo childViewerLikeInfo = new ChildViewerLikeInfo();
+							childViewerLikeInfo.setLike(isLiked);
+							childViewerLikeInfo.setChildInfo(childInfo);
+							childViewerLikeInfo.setViewerInfo(viewerInfo);
+							childViewerLikeInfoService.saveOrUpdate(childViewerLikeInfo);
+							log.info("Child Viewer like saved successfully");
+							responseJsonObject.put(RestConstants.MESSAGE, "You liked :"+childInfo.getFirstName());
+							responseJsonObject.put(RestConstants.IS_LIKE, true);
+						} else {
+							log.info("Like found by viewer :"+viewerId+" for child :"+childId);
+							responseJsonObject.put(RestConstants.MESSAGE, "You Already liked :"+childInfo.getFirstName());
+							responseJsonObject.put(RestConstants.IS_LIKE, false);
+						}
 					} else {
 						log.error("No viewer found with given viewer id");
 						responseJsonObject.put(RestConstants.MESSAGE, "Viewer not exist");
@@ -67,6 +76,6 @@ public class LikeHandler {
 			e.printStackTrace();
 		}
 		log.debug("START :: LikeHandler.manageLike()");
-		return  responseJsonObject;
+		return  JSONFactoryUtil.createJSONArray().put(responseJsonObject);
 	}
 }

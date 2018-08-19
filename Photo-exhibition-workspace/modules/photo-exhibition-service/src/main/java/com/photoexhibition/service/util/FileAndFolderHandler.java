@@ -2,12 +2,19 @@ package com.photoexhibition.service.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.spi.FileSystemProvider;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
+import javax.servlet.http.Part;
+
+import org.springframework.core.io.FileSystemResource;
 
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
@@ -25,8 +32,11 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.SystemProperties;
+import com.photoexhibition.service.model.ChildInfo;
 
 public class FileAndFolderHandler {
 	private static final Log log = LogFactoryUtil.getLog(FileAndFolderHandler.class);
@@ -244,9 +254,43 @@ public class FileAndFolderHandler {
 					}*/
 				}
 			}
+			System.out.println("Insdie -------------------------");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
 		return file;
+	}
+	public static void uploadFile(ActionRequest actionRequest, ChildInfo childInfo){
+		String HOME_DIR = System.getProperty("catalina.base");
+		System.out.println("HOME_DIR ::"+HOME_DIR);
+	}
+	public static String uploadFile(ThemeDisplay themeDisplay, File sourceFile,String folderName){
+		String HOME_DIR = System.getProperty("catalina.base");
+		System.out.println("HOME_DIR ::"+HOME_DIR);
+		System.out.println("HOME_DIR ::"+SystemProperties.TMP_DIR);
+		File destinationDir = new File(HOME_DIR+"/webapps/ROOT/html/"+folderName+"/");
+		String imagePath = null;
+		
+		System.out.println("file4 :: "+destinationDir.exists());
+		System.out.println("file4 :: "+destinationDir.isDirectory());
+		if(!destinationDir.exists()){
+			destinationDir.mkdir();
+		}
+		try {
+			String saveFilePath = destinationDir+ File.separator+sourceFile.getName();
+			log.info("saveFilePath:: " + saveFilePath);
+			FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+			int bytesRead = -1;
+			byte[] buffer = new byte[4096];
+			InputStream inputStream = new FileInputStream(sourceFile);
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, bytesRead);
+			}
+			outputStream.close();
+			imagePath = themeDisplay.getURLPortal()+"/html/"+folderName+"/"+sourceFile.getName();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return imagePath;
 	}
 }
