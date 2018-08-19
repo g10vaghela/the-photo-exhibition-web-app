@@ -34,6 +34,7 @@ import com.photoexhibition.service.util.StatusValue;
 			"com.liferay.portlet.display-category=Photo-Exhibition",
 			"com.liferay.portlet.instanceable=true",
 			"com.liferay.portlet.header-portlet-css=/css/custom.css",
+			"com.liferay.portlet.footer-portlet-css=/css/photo-exh-display.css",
 			"add-process-action-success-action=false",
 			"javax.portlet.init-param.add-process-action-success-action=false",
 			"javax.portlet.display-name=Photo Exhibition Display Portlet",
@@ -59,7 +60,6 @@ public class PhotoExhibitionDisplayPortlet extends MVCPortlet {
 		// TODO Auto-generated method stub
 		log.info(" :: PhotoExhibitionDisplayPortlet :: render() ");
 		
-		int totalCount = 0;
 		int delta = ParamUtil.getInteger(renderRequest,"delta",CommonUtil.PAGINATION_PER_PAGE_ITEM);
 		int currentPageIndex = ParamUtil.getInteger(renderRequest,"currentPageIndex",1);
 		
@@ -69,6 +69,12 @@ public class PhotoExhibitionDisplayPortlet extends MVCPortlet {
 		} else {
 			currentPageIndex = 1;
 		}
+		setChildAndAdvertiseItems(renderRequest, delta, currentPageIndex);
+		super.render(renderRequest, renderResponse);
+	}
+
+	private void setChildAndAdvertiseItems(RenderRequest renderRequest, int delta, int currentPageIndex) {
+		int totalCount = 0;
 		ChildInfoSearchCriteria childSearchCriteria = new ChildInfoSearchCriteria();
 		childSearchCriteria.setStatus(true);
 		
@@ -76,17 +82,8 @@ public class PhotoExhibitionDisplayPortlet extends MVCPortlet {
 		childSearchCriteria.setPagination(true);
 		childSearchCriteria.setPaginationDelta(delta);
 		childSearchCriteria.setPaginationPage(currentPageIndex);
-		
 		List<ChildInfo> childList = childInfoService.getChildInfoList(childSearchCriteria);
-		/*
-		AdvertiseInfoSearchChiteria advertiseSC = new AdvertiseInfoSearchChiteria();
-		advertiseSC.setStatus(StatusValue.ACTIVE.getValue());
-		int	advertiseTotalCount = advertiseInfoService.getAdvertiseInfoCount(advertiseSC);
 		
-		advertiseSC.setPagination(true);
-		advertiseSC.setPaginationDelta(1);
-		advertiseSC.setPaginationPage(currentPageIndex);
-		*/
 		AdvertiseInfo advertise = advertiseInfoService.getAdvertiseInfoById(currentPageIndex);
 	
 		List<PhotoExhbDisplayVo> exhibitionItems = new ArrayList<PhotoExhbDisplayVo>();
@@ -95,29 +92,22 @@ public class PhotoExhibitionDisplayPortlet extends MVCPortlet {
 		renderRequest.setAttribute("advertise", advertise);
 		renderRequest.setAttribute("exhibitionItems", exhibitionItems);
 		//renderRequest.setAttribute("cur", cur);
-		log.info(" ###############  currentPageIndex ==> " +currentPageIndex);
 		totalCount = childTotalCount; // No need to calculate advertise count - consider only child count
 		SearchContainerUtil.setCommonRenderParameter(renderRequest, childSearchCriteria, totalCount);
-		super.render(renderRequest, renderResponse);
 	}
 
 	private void setExhibitionItems(List<PhotoExhbDisplayVo> exhibitionItems, List<ChildInfo> childList, AdvertiseInfo advertise) {
 		log.info(" :: setExhibitionItems :: ");
 		if(childList != null) {
-			//log.info(" :: childList != null :: ");
 			for(int i =0; i<(childList.size()); i++) {
-			//	log.info(" 1 set vo " +i);
 				PhotoExhbDisplayVo photoExhbDisplayVo = new PhotoExhbDisplayVo();
-				
-					ChildInfo child = childList.get(i);
-					if(child !=null) {
-						photoExhbDisplayVo.setAdvertise(false);
-						photoExhbDisplayVo.setId(child.getChildId());
-						photoExhbDisplayVo.setLink(child.getPhotoUrl());
-						photoExhbDisplayVo.setName(child.getFullName());
-					}
-				
-			//	log.info("2  set vo " +i);
+				ChildInfo child = childList.get(i);
+				if(child !=null) {
+					photoExhbDisplayVo.setAdvertise(false);
+					photoExhbDisplayVo.setId(child.getChildId());
+					photoExhbDisplayVo.setLink(child.getPhotoUrl());
+					photoExhbDisplayVo.setName(child.getFullName());
+				}
 				exhibitionItems.add(photoExhbDisplayVo);
 			}
 			PhotoExhbDisplayVo photoExhbDisplayVo = new PhotoExhbDisplayVo();

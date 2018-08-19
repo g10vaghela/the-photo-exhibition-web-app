@@ -1,0 +1,4 @@
+.photo-exhb-display-container .photo-exhb-display-body .photo-exhb-display-table {border-spacing: 10px;border-collapse: separate;}
+.photo-exhb-display-container .photo-exhb-display-body .photo-exhb-display-table tr { height:170px;}
+.photo-exhb-display-container .photo-exhb-display-body .photo-exhb-display-table tr td.child-cell {width: 15%;}
+.photo-exhb-display-container .photo-exhb-display-body .photo-exhb-display-table tr td.common-cell {background:yello;border: 1px solid #d4d4d4;}
