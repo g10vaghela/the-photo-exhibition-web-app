@@ -17,5 +17,23 @@
 .photo-exhb-display-container .photo-exhb-display-body .photo-exhb-display-table tr td.child-cell .child-details-wrapper .child-details {
     margin-left: 5px;
 }
+
+.photo-exhb-display-container .photo-exhb-display-body .photo-exhb-display-table  .image-container {
+  font-size: 0;
+  text-align: center;
+  width: 200px;  /* Container's dimensions */
+  height: 150px;
+}
+.photo-exhb-display-container .photo-exhb-display-body .photo-exhb-display-table  .image-container img {
+  display: inline-block;
+  vertical-align: middle;
+  max-height: 100%;
+  max-width: 100%;
+}
+.photo-exhb-display-container .photo-exhb-display-body .photo-exhb-display-table  .image-trick {
+  display: inline-block;
+  vertical-align: middle;
+  height: 150px;
+}
     
 .photo-exhb-display-container .photo-exhb-display-body .photo-exhb-display-table tr td.common-cell {border: 1px solid #d4d4d4;}

@@ -55,14 +55,14 @@ boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 								</c:if>
 								<c:if test="<%=!exhbItem.isAdvertise() %>">
 									<% child = exhbItem.getChildInfo(); %>
-									<td class="common-cell child-cell">
+									<td class="common-cell child-cell" style="width:20%;height:325px;">
 										<div style="padding:5px;">
 											<c:choose>
 												<c:when  test="<%=child.getOrientation() == PhotoOrientation.LANDSCAPE.getValue() %>">
-													<img src="<%=child.getPhotoUrl() %>" alt='<%="image of "+child.getFullName() %>' width="350" height="250"/>
+													<img src="<%=child.getPhotoUrl() %>" alt='<%="image of "+child.getFullName() %>' style="width:100%"/>
 												</c:when>
 												<c:otherwise>
-													<img src="<%=child.getPhotoUrl() %>" alt='<%="image of "+child.getFullName() %>' width="250" height="350"/>
+													<img src="<%=child.getPhotoUrl() %>" alt='<%="image of "+child.getFullName() %>' style="width:100%"/>
 												</c:otherwise>
 											</c:choose>
 										</div>
@@ -72,8 +72,8 @@ boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 								<c:if test="<%=exhbItem.isAdvertise() %>">
 									<% advertise = exhbItem.getAdvertise(); %>
 									<td class="common-cell advertise-cell" colspan="3" rowspan="2">
-										<div style="">
-		                    				<img alt="<%= advertise.getAdvertiseName() %>" src="<%= advertise.getAdvertisePhotoUrl() %>">
+										<div style="padding:5px;">
+		                    				<img alt="<%= advertise.getAdvertiseName() %>" src="<%= advertise.getAdvertisePhotoUrl() %>" style="width:100%">
 										</div>
 									</td>
 								</c:if>
