@@ -198,4 +198,26 @@ public class GeneralConfigurationPortlet extends MVCPortlet {
 		}
 		log.info("END :: GeneralConfigurationPortlet.minimumLikeRequired()");
 	}
+	
+	@ProcessAction(name="locationTrackingServiceUpdate")
+	public void locationTrackingServiceUpdate(ActionRequest actionRequest, ActionResponse actionResponse){
+		log.info("START :: GeneralConfigurationPortlet.locationTrackingServiceUpdate()");
+		String locationTranckingServiceSwitch = actionRequest.getParameter("location-tracking-switch");
+		try {
+			log.debug("locationTranckingServiceSwitch :: "+locationTranckingServiceSwitch);
+			GeneralConfigurationInfo generalConfigurationInfo = new GeneralConfigurationInfo();
+			generalConfigurationInfo.setKey(GeneralConfigurationConstants.IS_LOCATION_TRACKING_ON);
+			if(Validator.isNotNull(locationTranckingServiceSwitch)){
+				generalConfigurationInfo.setValue("true");
+			} else {
+				generalConfigurationInfo.setValue("false");
+			}
+			generalConfigurationService.saveOrUpdate(generalConfigurationInfo);
+			SessionMessages.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_SUCCESS_MESSAGE);
+		} catch (Exception e) {
+			log.error("Error : "+e);
+			SessionErrors.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_ERROR_MESSAGE);
+		}
+		log.info("END :: GeneralConfigurationPortlet.locationTrackingServiceUpdate()");
+	}
 }
