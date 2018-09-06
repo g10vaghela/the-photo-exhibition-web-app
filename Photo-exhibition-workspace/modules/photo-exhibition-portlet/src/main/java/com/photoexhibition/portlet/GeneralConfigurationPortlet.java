@@ -10,8 +10,6 @@ import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.poi.util.SystemOutLogger;
-import org.omg.CORBA.Request;
 import org.osgi.service.component.annotations.Component;
 
 import com.liferay.portal.kernel.log.Log;

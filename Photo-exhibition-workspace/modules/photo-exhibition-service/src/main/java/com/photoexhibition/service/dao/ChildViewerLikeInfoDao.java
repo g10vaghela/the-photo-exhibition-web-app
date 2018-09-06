@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.photoexhibition.service.model.ChildViewerLikeInfo;
+import com.photoexhibition.service.vo.ChildInfoVO;
 
 public class ChildViewerLikeInfoDao extends BaseDao{
 	private static final Log log = LogFactoryUtil.getLog(ChildViewerLikeInfoDao.class);
@@ -137,5 +138,53 @@ public class ChildViewerLikeInfoDao extends BaseDao{
 		}
 		log.debug("END :: ChildViewerLikeInfoDao.getChildViewerLikeInfoByChildAndViewerId()");
 		return childViewerLikeInfo;
+	}
+	
+	public List<ChildInfoVO> getChildInfoVOUptoTopLimit(int topLimit){
+		log.debug("START :: ChildViewerLikeInfoDao.getChildInfoVOUptoTopLimit()");
+		List<ChildInfoVO> childInfoVOList = new ArrayList<>();
+		Session session = getSession();
+		Transaction transaction = session.getTransaction();
+		try {
+			transaction.begin();
+			Query query = getQuery(session, topLimit);
+			transaction.commit();
+		} catch (Exception e) {
+			log.error("Error :: "+e);
+			transaction.rollback();
+		} finally {
+			closeSession(session);
+		}
+		log.debug("END :: ChildViewerLikeInfoDao.getChildInfoVOUptoTopLimit()");
+		return childInfoVOList;
+	}
+	public int countTotalLikeByChildId(long childId){
+		log.debug("START :: ChildViewerLikeInfoDao.countTotalLikeByChildId()");
+		Session session = getSession();
+		Transaction transaction = session.getTransaction();
+		int totalLikes = 0;
+		try {
+			String queryString = "select count(*) from ChildViewerLikeInfo cvli where cvli.childInfo.childId =:childId and cvli.isLike =:isLike";
+			transaction.begin();
+			Query query = session.createQuery(queryString);
+			query.setParameter("childId", childId);
+			query.setParameter("isLike", true);
+			totalLikes = Integer.parseInt(String.valueOf(query.uniqueResult()));
+			log.debug("totalLikes  :: "+totalLikes);
+			transaction.commit();
+		} catch(Exception e){
+			log.error(e);
+			transaction.rollback();
+		}finally {
+			closeSession(session);
+		}
+		log.debug("END :: ChildViewerLikeInfoDao.countTotalLikeByChildId()");
+		return totalLikes;
+	}
+	private Query getQuery(Session session, int topLimit) {
+		log.debug("START :: ChildViewerLikeInfoDao.getQuery()");
+		
+		log.debug("END :: ChildViewerLikeInfoDao.getQuery()");
+		return null;
 	}
 }

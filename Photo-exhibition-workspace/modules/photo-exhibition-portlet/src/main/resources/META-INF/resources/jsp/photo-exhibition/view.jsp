@@ -1,5 +1,5 @@
+<%@page import="com.photoexhibition.service.vo.PhotoExhbDisplayVo"%>
 <%@page import="com.photoexhibition.service.util.PhotoOrientation"%>
-<%@page import="com.photoexhibition.portlet.vo.PhotoExhbDisplayVo"%>
 <%@page import="com.photoexhibition.service.model.AdvertiseInfo"%>
 <%@page import="com.photoexhibition.service.model.ChildInfo"%>
 <%@page import="java.util.List"%>
@@ -47,7 +47,7 @@ boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 						
 						<table class="photo-exhb-display-table">
 							<liferay-ui:search-container-row  indexVar="i"
-								className="com.photoexhibition.portlet.vo.PhotoExhbDisplayVo"
+								className="com.photoexhibition.service.vo.PhotoExhbDisplayVo"
 								modelVar="exhbItem" >
 
 								<c:if test="${((i == 0) || (i==5) || (i==8) || (i==10))}">

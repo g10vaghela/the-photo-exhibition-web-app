@@ -5,6 +5,7 @@ import java.util.List;
 import com.photoexhibition.service.ChildViewerLikeInfoService;
 import com.photoexhibition.service.dao.ChildViewerLikeInfoDao;
 import com.photoexhibition.service.model.ChildViewerLikeInfo;
+import com.photoexhibition.service.vo.ChildInfoVO;
 
 public class ChildViewerLikeInfoServiceImpl implements ChildViewerLikeInfoService{
 	private ChildViewerLikeInfoDao childViewerLikeInfoDao;
@@ -36,5 +37,15 @@ public class ChildViewerLikeInfoServiceImpl implements ChildViewerLikeInfoServic
 	@Override
 	public ChildViewerLikeInfo getChildViewerLikeInfoByChildAndViewerId(long childId, long viewerId) {
 		return childViewerLikeInfoDao.getChildViewerLikeInfoByChildAndViewerId(childId, viewerId);
+	}
+
+	@Override
+	public List<ChildInfoVO> getChildInfoVOByTopLimit(int topLimit) {
+		return null;
+	}
+
+	@Override
+	public int countTotalLikeByChildId(long childId) {
+		return childViewerLikeInfoDao.countTotalLikeByChildId(childId);
 	}
 }

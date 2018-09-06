@@ -19,16 +19,13 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.photoexhibition.portlet.constants.ControllerPortletKeys;
 import com.photoexhibition.portlet.search.criteria.util.SearchContainerUtil;
 import com.photoexhibition.portlet.util.CommonUtil;
-import com.photoexhibition.portlet.vo.PhotoExhbDisplayVo;
 import com.photoexhibition.service.AdvertiseInfoService;
 import com.photoexhibition.service.ChildInfoService;
-import com.photoexhibition.service.ChildViewerLikeInfoService;
 import com.photoexhibition.service.model.AdvertiseInfo;
 import com.photoexhibition.service.model.ChildInfo;
-import com.photoexhibition.service.search.criteria.AdvertiseInfoSearchChiteria;
 import com.photoexhibition.service.search.criteria.ChildInfoSearchCriteria;
 import com.photoexhibition.service.util.BeanLocalServiceUtil;
-import com.photoexhibition.service.util.StatusValue;
+import com.photoexhibition.service.vo.PhotoExhbDisplayVo;
 
 @Component(
 		immediate = true,
@@ -54,13 +51,10 @@ public class PhotoExhibitionDisplayPortlet extends MVCPortlet {
 	private final Log log = LogFactoryUtil.getLog(PhotoExhibitionDisplayPortlet.class);
 	
 	private static ChildInfoService childInfoService = BeanLocalServiceUtil.getChildInfoService();
-	private static AdvertiseInfoService advertiseInfoService = BeanLocalServiceUtil.getAdvertiseInfoService();
-	private static ChildViewerLikeInfoService childViewerLikeInfoService = BeanLocalServiceUtil.getChildViewerLikeInfoService(); 
-	
+	private static AdvertiseInfoService advertiseInfoService = BeanLocalServiceUtil.getAdvertiseInfoService(); 
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
-		// TODO Auto-generated method stub
 		log.info(" :: PhotoExhibitionDisplayPortlet :: render() ");
 		
 		int delta = ParamUtil.getInteger(renderRequest,"delta",CommonUtil.PAGINATION_PER_PAGE_ITEM);
@@ -85,6 +79,7 @@ public class PhotoExhibitionDisplayPortlet extends MVCPortlet {
 		childSearchCriteria.setPagination(true);
 		childSearchCriteria.setPaginationDelta(delta);
 		childSearchCriteria.setPaginationPage(currentPageIndex);
+		childSearchCriteria.setStatus(true);
 		List<ChildInfo> childList = childInfoService.getChildInfoList(childSearchCriteria);
 
 		List<PhotoExhbDisplayVo> exhibitionItems = new ArrayList<PhotoExhbDisplayVo>();

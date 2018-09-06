@@ -1,4 +1,4 @@
-package com.photoexhibition.portlet.vo;
+package com.photoexhibition.service.vo;
 
 import com.photoexhibition.service.model.AdvertiseInfo;
 import com.photoexhibition.service.model.ChildInfo;
