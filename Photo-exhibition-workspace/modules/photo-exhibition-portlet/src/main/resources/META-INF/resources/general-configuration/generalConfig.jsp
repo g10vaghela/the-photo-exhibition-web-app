@@ -132,9 +132,15 @@
 				<div class="col-md-3">
 					<liferay-ui:message key="lbl.location.distance"/>
 				</div>
-				<div class="col-md-7">
+				<div class="col-md-3">
 					<aui:input name="validDistance" id="validDistance" type="text" label="lbl.general.config.location.distance"
 					value="<%=validDistanceConfiguration.getValue() %>">
+						<aui:validator name="required"/>
+					</aui:input>
+				</div>
+				<div class="col-md-4">
+					<aui:input name="outOfRangeMessage" id="outOfRangeMessage" type="text" label="lbl.general.config.location.distance.out.of.range"
+					value="<%=validDistanceConfiguration.getMessage() %>">
 						<aui:validator name="required"/>
 					</aui:input>
 				</div>

@@ -120,12 +120,14 @@ public class GeneralConfigurationPortlet extends MVCPortlet {
 	public void validDistanceConfigurationUpdate(ActionRequest actionRequest, ActionResponse actionResponse){
 		log.info("START :: GeneralConfigurationPortlet.validDistanceConfigurationUpdate()");
 		String validDistance = actionRequest.getParameter("validDistance");
+		String outOfRangeMessage = actionRequest.getParameter("outOfRangeMessage");
 		try {
 			log.info("validDistance ::"+validDistance);
 			if(Validator.isNotNull(validDistance)){
 				GeneralConfigurationInfo generalConfigurationInfo = new GeneralConfigurationInfo();
 				generalConfigurationInfo.setKey(GeneralConfigurationConstants.VALID_DISTANCE_FROM_CONTEST_LOCATION);
 				generalConfigurationInfo.setValue(validDistance);
+				generalConfigurationInfo.setMessage(outOfRangeMessage);
 				generalConfigurationService.saveOrUpdate(generalConfigurationInfo);
 				SessionMessages.add(actionRequest, MessageConstant.GENERAL_CONFIG_SAVE_OR_UPDATE_SUCCESS_MESSAGE);
 			}
