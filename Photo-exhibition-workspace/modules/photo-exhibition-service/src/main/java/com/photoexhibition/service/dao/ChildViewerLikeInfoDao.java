@@ -183,8 +183,16 @@ public class ChildViewerLikeInfoDao extends BaseDao{
 	}
 	private Query getQuery(Session session, int topLimit) {
 		log.debug("START :: ChildViewerLikeInfoDao.getQuery()");
+		String queryString = "select GROUP_CONCAT(child_Id SEPARATOR ',') as child_id, likes from "
+				+ "(select child_Id, COUNT(is_like) as likes from child_view_like where is_like = 1 group by child_Id order by likes DESC) as abc group by likes order by likes DESC LIMIT " + topLimit;
 		
+		Transaction transaction = session.getTransaction();
+		
+		transaction.begin();
+		Query query = session.createQuery(queryString);
+		log.debug(" ChildViewerLikeInfoDao.getQuery() :: " + query);
+		System.out.println(" ChildViewerLikeInfoDao.getQuery() :: " + query);
 		log.debug("END :: ChildViewerLikeInfoDao.getQuery()");
-		return null;
+		return query;
 	}
 }

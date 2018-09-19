@@ -1,7 +1,8 @@
 <%@include file="../init.jsp" %>
 <%@include file="../common-import.jsp" %>
 
-<aui:form name="search_child_form" id="search_child_form">
+<portlet:actionURL var="actionURL" name="selectTopChild"/>
+<aui:form name="search_child_form" id="search_child_form" action="<%=actionURL.toString()%>">
 	<div class="panel-body">
 		<div class="row">
 			<div class="col-md-4">

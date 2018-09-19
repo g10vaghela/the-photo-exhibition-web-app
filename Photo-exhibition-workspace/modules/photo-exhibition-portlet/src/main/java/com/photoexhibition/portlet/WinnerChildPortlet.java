@@ -8,6 +8,9 @@ import javax.portlet.Portlet;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ProcessAction;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -45,6 +48,7 @@ public class WinnerChildPortlet extends MVCPortlet{
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
 		log.debug("START :: WinnerChildPortlet.render()");
+		
 		String searchTopNo = renderRequest.getParameter("searchTopNo");
 		List<ChildInfoVO> childInfoList = new ArrayList<>();
 		log.info("searchTopNo :: "+searchTopNo);
@@ -57,9 +61,23 @@ public class WinnerChildPortlet extends MVCPortlet{
 		super.render(renderRequest, renderResponse);
 	}
 	
+	@ProcessAction(name="selectTopChild")
+	public void selectTopChild(ActionRequest actionRequest, ActionResponse actionResponse) {
+		System.out.println("START :: WinnerChildPortlet.Action()");
+		String topNo = actionRequest.getParameter("topNo");
+		System.out.println("topNo  ::"+topNo);
+		List<ChildInfoVO> list = getChildInfoVo(Integer.valueOf(topNo));
+		System.out.println("list : " + list);
+		System.out.println("END :: WinnerChildPortlet.Action()");
+	}
+	
 	private List<ChildInfoVO> getChildInfoVo(int topLimit){
 		//childViewerLikeInfoService.get
+		System.out.println("START :: WinnerChildPortlet.getChildInfoVo()");
 		
-		return null;
+		List<ChildInfoVO> result = childViewerLikeInfoService.getChildInfoVOUptoTopLimit(topLimit); 
+		System.out.println("result  : " + result );
+		System.out.println("END :: WinnerChildPortlet.getChildInfoVo()");
+		return result;
 	}
 }
