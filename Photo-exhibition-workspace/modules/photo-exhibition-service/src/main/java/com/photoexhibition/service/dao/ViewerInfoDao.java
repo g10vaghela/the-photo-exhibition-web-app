@@ -1,14 +1,20 @@
 package com.photoexhibition.service.dao;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.aspectj.weaver.ISourceContext;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.photoexhibition.service.constant.ViewerConstants;
 import com.photoexhibition.service.model.ViewerInfo;
+import com.photoexhibition.service.search.criteria.ViewerInfoSearchCriteria;
 
 public class ViewerInfoDao extends BaseDao{
 	private static final Log log = LogFactoryUtil.getLog(ViewerInfoDao.class);
@@ -165,5 +171,66 @@ public class ViewerInfoDao extends BaseDao{
 		}
 		log.debug("END :: ViewerInfoDao.getViewerInfoByMobileAndDeviceNumber()");
 		return viewerInfo;
+	}
+	
+	public List<ViewerInfo> getViewerInfoBySearchCriteria(ViewerInfoSearchCriteria searchCriteria){
+		List<ViewerInfo> viewerInfoList = new ArrayList<>();
+		Session session = getSession();
+		Transaction transaction = session.getTransaction();
+		try {
+			transaction.begin();
+			Query query = createQuery(session, searchCriteria, false);
+			viewerInfoList = query.list();
+			transaction.commit();
+		} catch (Exception e) {
+			log.error(e);
+		}
+		return viewerInfoList;
+	}
+	
+	public int countViewerInfoBySearchCriteria(ViewerInfoSearchCriteria searchCriteria){
+		List<ViewerInfo> viewerInfoList = new ArrayList<>();
+		Session session = getSession();
+		Transaction transaction = session.getTransaction();
+		int count = 0;
+		try {
+			transaction.begin();
+			Query query = createQuery(session, searchCriteria, true);
+			count = Integer.parseInt(String.valueOf(query.uniqueResult()));
+			transaction.commit();
+		} catch (Exception e) {
+			log.error(e);
+		}
+		return count;
+	}
+	
+	public Query createQuery(Session session, ViewerInfoSearchCriteria searchCriteria, boolean isCountQuery){
+		StringBuilder queryString = new StringBuilder();
+		
+		if(isCountQuery){
+			queryString.append("SELECT COUNT(*) "); 
+		}
+		
+		queryString.append("from ViewerInfo ");
+		if(Validator.isNotNull(searchCriteria.getViewerId())){
+			queryString.append(" where viewerId =:viewerId");
+		} else if(Validator.isNotNull(searchCriteria.getMobileNumber())){
+			queryString.append(" where mobileNumber =:mobileNumber");
+		}
+		
+		Query searchQuery = session.createQuery(queryString.toString());
+		
+		if(Validator.isNotNull(searchCriteria.getViewerId())){
+			searchQuery.setParameter("viewerId", searchCriteria.getViewerId());
+		} else if(Validator.isNotNull(searchCriteria.getMobileNumber())){
+			searchQuery.setParameter("mobileNumber", searchCriteria.getMobileNumber());
+		}
+		
+		if(searchCriteria.isPagination() && !isCountQuery) {
+			searchQuery.setFirstResult((searchCriteria.getPaginationPage() -1) * searchCriteria.getPaginationDelta());
+			searchQuery.setMaxResults(searchCriteria.getPaginationDelta());
+		}
+		
+		return searchQuery;
 	}
 }

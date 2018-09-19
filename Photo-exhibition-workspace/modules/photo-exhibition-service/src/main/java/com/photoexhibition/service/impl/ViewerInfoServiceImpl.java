@@ -1,8 +1,11 @@
 package com.photoexhibition.service.impl;
 
+import java.util.List;
+
 import com.photoexhibition.service.ViewerInfoService;
 import com.photoexhibition.service.dao.ViewerInfoDao;
 import com.photoexhibition.service.model.ViewerInfo;
+import com.photoexhibition.service.search.criteria.ViewerInfoSearchCriteria;
 
 public class ViewerInfoServiceImpl implements ViewerInfoService{
 	private ViewerInfoDao viewerInfoDao;
@@ -39,5 +42,15 @@ public class ViewerInfoServiceImpl implements ViewerInfoService{
 	@Override
 	public ViewerInfo save(ViewerInfo viewerInfo) {
 		return viewerInfoDao.save(viewerInfo);		
+	}
+
+	@Override
+	public List<ViewerInfo> getViewerInfoBySearchCriteria(ViewerInfoSearchCriteria searchCriteria) {
+		return this.viewerInfoDao.getViewerInfoBySearchCriteria(searchCriteria);
+	}
+
+	@Override
+	public int countViewerInfoBySearchCriteria(ViewerInfoSearchCriteria searchCriteria) {
+		return this.viewerInfoDao.countViewerInfoBySearchCriteria(searchCriteria);
 	}
 }

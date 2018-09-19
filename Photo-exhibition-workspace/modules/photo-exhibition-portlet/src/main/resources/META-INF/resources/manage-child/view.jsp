@@ -51,7 +51,7 @@
 			</div>
 			<div class="col-md-4 align-items-center">
 				<div class="col-md-6">
-					<aui:button onClick="<%=importBulkChildURL.toString() %>" cssClass = "btn btn-primary btn-default btn-small pull-right" value="Back To List"></aui:button>
+					<aui:button onClick="<%=importBulkChildURL.toString() %>" cssClass = "btn btn-primary btn-default btn-small pull-right" value="Bulk Upload"></aui:button>
 				</div>
 				<div class="col-md-6">
 					<button class="btn btn-primary btn-default btn-small add-child-btn pull-right" id="add-child-btn">
