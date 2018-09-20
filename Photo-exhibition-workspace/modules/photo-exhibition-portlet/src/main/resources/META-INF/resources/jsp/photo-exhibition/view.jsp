@@ -56,7 +56,7 @@ boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 								<c:if test="<%=!exhbItem.isAdvertise() %>">
 									<% child = exhbItem.getChildInfo(); %>
 									<td class="common-cell child-cell" style="width:20%;height:325px;">
-										<div style="padding:5px;">
+										<div style="padding: 5px 5px 0px 5px;height: 86%;">
 											<img src="<%=child.getPhotoUrl() %>" alt='<%="image of "+child.getFullName() %>' style="width:100%;max-height:325px;"/>
 										</div>
 										<div class="child-details-wrapper"><span class="child-details"> <%= child.getChildId() +" - " +child.getFullName() +" - " +exhbItem.getTotalLike()  %> </span></div>
