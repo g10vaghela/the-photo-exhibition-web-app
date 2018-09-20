@@ -21,6 +21,7 @@ import com.photoexhibition.portlet.search.criteria.util.SearchContainerUtil;
 import com.photoexhibition.portlet.util.CommonUtil;
 import com.photoexhibition.service.AdvertiseInfoService;
 import com.photoexhibition.service.ChildInfoService;
+import com.photoexhibition.service.ChildViewerLikeInfoService;
 import com.photoexhibition.service.model.AdvertiseInfo;
 import com.photoexhibition.service.model.ChildInfo;
 import com.photoexhibition.service.search.criteria.ChildInfoSearchCriteria;
@@ -51,11 +52,13 @@ public class PhotoExhibitionDisplayPortlet extends MVCPortlet {
 	private final Log log = LogFactoryUtil.getLog(PhotoExhibitionDisplayPortlet.class);
 	
 	private static ChildInfoService childInfoService = BeanLocalServiceUtil.getChildInfoService();
-	private static AdvertiseInfoService advertiseInfoService = BeanLocalServiceUtil.getAdvertiseInfoService(); 
+	private static AdvertiseInfoService advertiseInfoService = BeanLocalServiceUtil.getAdvertiseInfoService();
+	private static ChildViewerLikeInfoService childViewerLikeInfoService = BeanLocalServiceUtil.getChildViewerLikeInfoService();
+			
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws IOException, PortletException {
-		log.info(" :: PhotoExhibitionDisplayPortlet :: render() ");
+		//log.info(" :: PhotoExhibitionDisplayPortlet :: render() ");
 		
 		int delta = ParamUtil.getInteger(renderRequest,"delta",CommonUtil.PAGINATION_PER_PAGE_ITEM);
 		int currentPageIndex = ParamUtil.getInteger(renderRequest,"currentPageIndex",1);
@@ -103,16 +106,26 @@ public class PhotoExhibitionDisplayPortlet extends MVCPortlet {
 	}
 
 	private void setExhibitionItems(List<PhotoExhbDisplayVo> exhibitionItems, List<ChildInfo> childList) {
-		log.info(" :: setExhibitionItems :: ");
+		//log.info(" :: setExhibitionItems :: ");
 		if(childList != null) {
-			for(int i =0; i<(childList.size()); i++) {
+			int i =0;
+			for(; i<(childList.size()); i++) {
 				PhotoExhbDisplayVo photoExhbDisplayVo = new PhotoExhbDisplayVo();
 				ChildInfo child = childList.get(i);
 				if(child !=null) {
-					//childViewerLikeInfoService.getChildViewerLikeInfoListByChildId(childId).getChildId()
-					//childInfoService.
+					photoExhbDisplayVo.setTotalLike(childViewerLikeInfoService.countTotalLikeByChildId(child.getChildId()));
 					photoExhbDisplayVo.setChildInfo(child);
 				}
+				exhibitionItems.add(photoExhbDisplayVo);
+			}
+			
+			for(;i<6;i++) {
+				PhotoExhbDisplayVo photoExhbDisplayVo = new PhotoExhbDisplayVo();
+				ChildInfo cinfo = new ChildInfo();
+				cinfo.setFirstName("");
+				cinfo.setMiddleName("");
+				cinfo.setLastName("");
+				photoExhbDisplayVo.setChildInfo(cinfo);
 				exhibitionItems.add(photoExhbDisplayVo);
 			}
 			PhotoExhbDisplayVo photoExhbDisplayVo = new PhotoExhbDisplayVo();

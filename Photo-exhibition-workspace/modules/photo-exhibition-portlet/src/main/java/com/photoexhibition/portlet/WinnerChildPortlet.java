@@ -75,7 +75,7 @@ public class WinnerChildPortlet extends MVCPortlet{
 		//childViewerLikeInfoService.get
 		System.out.println("START :: WinnerChildPortlet.getChildInfoVo()");
 		
-		List<ChildInfoVO> result = childViewerLikeInfoService.getChildInfoVOUptoTopLimit(topLimit); 
+		List<ChildInfoVO> result =null;//= childViewerLikeInfoService.getChildInfoVOUptoTopLimit(topLimit); 
 		System.out.println("result  : " + result );
 		System.out.println("END :: WinnerChildPortlet.getChildInfoVo()");
 		return result;

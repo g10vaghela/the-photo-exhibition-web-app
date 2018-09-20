@@ -57,23 +57,16 @@ boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 									<% child = exhbItem.getChildInfo(); %>
 									<td class="common-cell child-cell" style="width:20%;height:325px;">
 										<div style="padding:5px;">
-											<c:choose>
-												<c:when  test="<%=child.getOrientation() == PhotoOrientation.LANDSCAPE.getValue() %>">
-													<img src="<%=child.getPhotoUrl() %>" alt='<%="image of "+child.getFullName() %>' style="width:100%"/>
-												</c:when>
-												<c:otherwise>
-													<img src="<%=child.getPhotoUrl() %>" alt='<%="image of "+child.getFullName() %>' style="width:100%"/>
-												</c:otherwise>
-											</c:choose>
+											<img src="<%=child.getPhotoUrl() %>" alt='<%="image of "+child.getFullName() %>' style="width:100%;max-height:325px;"/>
 										</div>
-										<div class="child-details-wrapper"><span class="child-details"> <%= child.getChildId() +" - " +child.getFullName()  %> </span></div>
+										<div class="child-details-wrapper"><span class="child-details"> <%= child.getChildId() +" - " +child.getFullName() +" - " +exhbItem.getTotalLike()  %> </span></div>
 									</td>		
 								</c:if>
 								<c:if test="<%=exhbItem.isAdvertise() %>">
 									<% advertise = exhbItem.getAdvertise(); %>
-									<td class="common-cell advertise-cell" colspan="3" rowspan="2">
+									<td class="common-cell advertise-cell" colspan="3" rowspan="2" style="height:650px;">
 										<div style="padding:5px;">
-		                    				<img alt="<%= advertise.getAdvertiseName() %>" src="<%= advertise.getAdvertisePhotoUrl() %>" style="width:100%">
+		                    				<img alt="<%= advertise.getAdvertiseName() %>" src="<%= advertise.getAdvertisePhotoUrl() %>" style="width:100%;max-height:650px;">
 										</div>
 									</td>
 								</c:if>
@@ -114,6 +107,6 @@ boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 
 	$(document).ready(function() {
 		console.log(" doc ready... ");
-		//setTimeout( executeIteratorUrl , 15000);
+		setTimeout( executeIteratorUrl , 10000);
 	});
 </script>

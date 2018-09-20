@@ -12,7 +12,14 @@ public class PhotoExhbDisplayVo {
 	private String link;
 	private boolean isAdvertise;
 	private int orientation;
-
+	private int totalLike;
+	
+	public int getTotalLike() {
+		return totalLike;
+	}
+	public void setTotalLike(int totalLike) {
+		this.totalLike = totalLike;
+	}
 	public ChildInfo getChildInfo() {
 		return childInfo;
 	}
