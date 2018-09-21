@@ -9,12 +9,18 @@
 	List <ViewerInfo> viewerInfoList =(List<ViewerInfo>) request.getAttribute("viewerInfoList");
 	ViewerInfoSearchCriteria searchCriteria = (ViewerInfoSearchCriteria)request.getAttribute("searchCriteria");
 %>
+<%@include file="../success-message.jsp" %>
+<%@include file="../error-message.jsp" %>
+<liferay-portlet:renderURL varImpl="goToAddViewerScreen">
+	<portlet:param name="jspPage" value="/viewer_management/addViewer.jsp"/>
+</liferay-portlet:renderURL>
 <liferay-portlet:renderURL varImpl="iteratorURL">
 	<portlet:param name="mvcPath" value="/viewer_management/view.jsp" />
 	<portlet:param name="currentPageIndex" value="<%= String.valueOf(currentPageIndex) %>" />
 	<portlet:param name="viewerId" value="<%=String.valueOf(searchCriteria.getViewerId()) %>"/>
 	<portlet:param name="contectNumber" value="<%=searchCriteria.getMobileNumber() %>"/>
 </liferay-portlet:renderURL>
+<liferay-portlet:resourceURL var="resourceURL"></liferay-portlet:resourceURL>
 <portlet:actionURL var="addViewerURL" name="addViewer"/>
 <aui:form name="search_child_form" id="search_child_form">
 	<div class="panel-body">
@@ -41,6 +47,12 @@
 				<button class="btn btn-primary btn-default btn-small searc-child-btn" id="search-child-btn" type="Submit">
 					<liferay-ui:message key="btn.search" />
 				</button>
+			</div>
+			<div class="col-md-2">
+				<aui:button onClick="${resourceURL}" cssClass="btn btn-primary btn-default btn-small pull-right" value="Export Report"></aui:button>
+			</div>
+			<div class="col-md-2">
+				<aui:button onClick="${goToAddViewerScreen}" cssClass="btn btn-primary btn-default btn-small pull-right" value="Add Viewer"></aui:button>
 			</div>
 		</div>
 	</div>
@@ -82,6 +94,8 @@
 						</c:choose>
 					</liferay-ui:search-container-column-text>
 					
+					<liferay-ui:search-container-column-text name="OTP" property="otp" />
+
 					<liferay-ui:search-container-column-jsp align="right" path="/viewer_management/viewer-action.jsp" />
             
 				</liferay-ui:search-container-row>

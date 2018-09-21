@@ -13,4 +13,5 @@ public interface ChildViewerLikeInfoService {
 	public ChildViewerLikeInfo getChildViewerLikeInfoByChildAndViewerId(long childId, long viewerId);
 	public List<ChildInfoVO> getChildInfoVOByTopLimit(int topLimit);
 	public int countTotalLikeByChildId(long childId);
+	public int countTotalLikeByViewerId(long viewerId);
 }
