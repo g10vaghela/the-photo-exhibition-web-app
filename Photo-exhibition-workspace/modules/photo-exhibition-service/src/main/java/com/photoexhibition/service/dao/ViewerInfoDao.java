@@ -189,7 +189,6 @@ public class ViewerInfoDao extends BaseDao{
 	}
 	
 	public int countViewerInfoBySearchCriteria(ViewerInfoSearchCriteria searchCriteria){
-		List<ViewerInfo> viewerInfoList = new ArrayList<>();
 		Session session = getSession();
 		Transaction transaction = session.getTransaction();
 		int count = 0;
@@ -200,6 +199,9 @@ public class ViewerInfoDao extends BaseDao{
 			transaction.commit();
 		} catch (Exception e) {
 			log.error(e);
+			transaction.rollback();
+		} finally{
+			closeSession(session);
 		}
 		return count;
 	}
@@ -232,5 +234,23 @@ public class ViewerInfoDao extends BaseDao{
 		}
 		
 		return searchQuery;
+	}
+	
+	public List<ViewerInfo> getViewerInfoList(){
+		List<ViewerInfo> viewerInfoList = null;
+		Session session = getSession();
+		Transaction transaction = session.getTransaction();
+		try {
+			transaction.begin();
+			Query query = session.createQuery("from ViewerInfo");
+			viewerInfoList = query.list();
+			transaction.commit();
+		} catch (Exception e) {
+			log.error(e);
+			transaction.rollback();
+		} finally {
+			closeSession(session);
+		}
+		return viewerInfoList;
 	}
 }

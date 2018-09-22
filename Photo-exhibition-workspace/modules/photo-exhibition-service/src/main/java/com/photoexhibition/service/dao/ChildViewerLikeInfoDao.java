@@ -181,6 +181,30 @@ public class ChildViewerLikeInfoDao extends BaseDao{
 		log.debug("END :: ChildViewerLikeInfoDao.countTotalLikeByChildId()");
 		return totalLikes;
 	}
+	
+	public int countTotalLikeByViewerId(long viewerId){
+		log.debug("START :: ChildViewerLikeInfoDao.countTotalLikeByViewerId()");
+		Session session = getSession();
+		Transaction transaction = session.getTransaction();
+		int totalLikes = 0;
+		try {
+			String queryString = "select count(*) from ChildViewerLikeInfo cvli where cvli.viewerInfo.viewerId =:viewerId and cvli.isLike =:isLike";
+			transaction.begin();
+			Query query = session.createQuery(queryString);
+			query.setParameter("viewerId", viewerId);
+			query.setParameter("isLike", true);
+			totalLikes = Integer.parseInt(String.valueOf(query.uniqueResult()));
+			log.debug("totalLikes  :: "+totalLikes);
+			transaction.commit();
+		} catch(Exception e){
+			log.error(e);
+			transaction.rollback();
+		}finally {
+			closeSession(session);
+		}
+		log.debug("END :: ChildViewerLikeInfoDao.countTotalLikeByChildId()");
+		return totalLikes;
+	}
 	private Query getQuery(Session session, int topLimit) {
 		log.debug("START :: ChildViewerLikeInfoDao.getQuery()");
 		String queryString = "select GROUP_CONCAT(child_Id SEPARATOR ',') as child_id, likes from "

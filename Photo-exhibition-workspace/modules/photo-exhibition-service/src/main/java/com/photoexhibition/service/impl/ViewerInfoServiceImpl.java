@@ -53,4 +53,9 @@ public class ViewerInfoServiceImpl implements ViewerInfoService{
 	public int countViewerInfoBySearchCriteria(ViewerInfoSearchCriteria searchCriteria) {
 		return this.viewerInfoDao.countViewerInfoBySearchCriteria(searchCriteria);
 	}
+
+	@Override
+	public List<ViewerInfo> getViewerList() {
+		return this.viewerInfoDao.getViewerInfoList();
+	}
 }

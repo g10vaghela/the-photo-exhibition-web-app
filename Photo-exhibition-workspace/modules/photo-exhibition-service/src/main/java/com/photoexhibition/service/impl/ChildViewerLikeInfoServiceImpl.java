@@ -46,6 +46,11 @@ public class ChildViewerLikeInfoServiceImpl implements ChildViewerLikeInfoServic
 
 	@Override
 	public int countTotalLikeByChildId(long childId) {
-		return childViewerLikeInfoDao.countTotalLikeByChildId(childId);
+		return this.childViewerLikeInfoDao.countTotalLikeByChildId(childId);
+	}
+
+	@Override
+	public int countTotalLikeByViewerId(long viewerId) {
+		return this.childViewerLikeInfoDao.countTotalLikeByViewerId(viewerId);
 	}
 }

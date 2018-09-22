@@ -18,12 +18,16 @@
                 value="<%= String.valueOf(viewerInfo.getViewerId()) %>" />
     </portlet:actionURL>
   
-    <portlet:actionURL name="deleteViewer" var="deleteViewerURL">
+    <portlet:actionURL name="activeViewer" var="activeViewerURL">
             <portlet:param name="viewerId"
                 value="<%= String.valueOf(viewerInfo.getViewerId()) %>" />
     </portlet:actionURL>
 
      <liferay-ui:icon icon="icon-eye-open" message="View" url="<%=viewerViewURL.toString() %>" />
-     <liferay-ui:icon icon="icon-delete" message="Delete" url="<%=deleteViewerURL.toString() %>" />
+     <c:choose>
+     	<c:when test="<%=viewerInfo.isOtpVerified() == false %>">
+     		     <liferay-ui:icon icon="icon-delete" message="Active" url="<%=activeViewerURL.toString() %>" />
+     	</c:when>
+     </c:choose>
 
 </liferay-ui:icon-menu>
