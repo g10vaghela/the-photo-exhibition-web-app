@@ -125,6 +125,6 @@ boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 
 	$(document).ready(function() {
 		console.log(" doc ready... ");
-		//setTimeout( executeIteratorUrl , 15000);
+		setTimeout( executeIteratorUrl , 15000);
 	});
 </script>
