@@ -52,6 +52,8 @@ public class WinnerChildPortlet extends MVCPortlet{
 		String searchTopNo = renderRequest.getParameter("searchTopNo");
 		List<ChildInfoVO> childInfoList = new ArrayList<>();
 		log.info("searchTopNo :: "+searchTopNo);
+		List<ChildInfoVO> list = getChildInfoVo(Integer.valueOf(5));
+		System.out.println("in render list : " + list);
 		try {
 			renderRequest.setAttribute("searchTopNo", searchTopNo);
 		} catch (Exception e) {
@@ -74,8 +76,7 @@ public class WinnerChildPortlet extends MVCPortlet{
 	private List<ChildInfoVO> getChildInfoVo(int topLimit){
 		//childViewerLikeInfoService.get
 		System.out.println("START :: WinnerChildPortlet.getChildInfoVo()");
-		
-		List<ChildInfoVO> result =null;//= childViewerLikeInfoService.getChildInfoVOUptoTopLimit(topLimit); 
+		List<ChildInfoVO> result = childViewerLikeInfoService.getChildInfoVOByTopLimit(topLimit);
 		System.out.println("result  : " + result );
 		System.out.println("END :: WinnerChildPortlet.getChildInfoVo()");
 		return result;

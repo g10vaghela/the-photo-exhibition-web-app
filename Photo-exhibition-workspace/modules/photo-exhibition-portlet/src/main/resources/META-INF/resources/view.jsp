@@ -1,5 +1,5 @@
 <%@ include file="/init.jsp" %>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <portlet:actionURL var="actionURL" name="addNewEmployee"/>
 <aui:form name="payment_form" id="payment_form"  action="<%=actionURL.toString()%>">
 	<div class="panel-body">
@@ -16,3 +16,16 @@
 		</div>
 	</div>
 </aui:form>
+
+<script>
+$(document).ready(function() {
+	  setInterval(function() {
+	    cache_clear()
+	  }, 7000);
+	});
+
+	function cache_clear() {
+	  window.location.reload(true);
+	  // window.location.reload(); use this if you do not remove cache
+	}
+</script>

@@ -142,13 +142,16 @@ public class ChildViewerLikeInfoDao extends BaseDao{
 	
 	public List<ChildInfoVO> getChildInfoVOUptoTopLimit(int topLimit){
 		log.debug("START :: ChildViewerLikeInfoDao.getChildInfoVOUptoTopLimit()");
-		List<ChildInfoVO> childInfoVOList = new ArrayList<>();
+		List childInfoVOList;
 		Session session = getSession();
 		Transaction transaction = session.getTransaction();
 		try {
 			transaction.begin();
 			Query query = getQuery(session, topLimit);
+			childInfoVOList = (List) query.uniqueResult();
+			System.out.println("return childInfoVOList; : " +  childInfoVOList);
 			transaction.commit();
+			return childInfoVOList;
 		} catch (Exception e) {
 			log.error("Error :: "+e);
 			transaction.rollback();
@@ -156,7 +159,7 @@ public class ChildViewerLikeInfoDao extends BaseDao{
 			closeSession(session);
 		}
 		log.debug("END :: ChildViewerLikeInfoDao.getChildInfoVOUptoTopLimit()");
-		return childInfoVOList;
+		return null;
 	}
 	public int countTotalLikeByChildId(long childId){
 		log.debug("START :: ChildViewerLikeInfoDao.countTotalLikeByChildId()");
@@ -207,14 +210,23 @@ public class ChildViewerLikeInfoDao extends BaseDao{
 	}
 	private Query getQuery(Session session, int topLimit) {
 		log.debug("START :: ChildViewerLikeInfoDao.getQuery()");
-		String queryString = "select GROUP_CONCAT(child_Id SEPARATOR ',') as child_id, likes from "
-				+ "(select child_Id, COUNT(is_like) as likes from child_view_like where is_like = 1 group by child_Id order by likes DESC) as abc group by likes order by likes DESC LIMIT " + topLimit;
 		
+		String queryString = "select GROUP_CONCAT(child_Id) as child_id, likes from (select child_Id, count(is_like) as likes from child_view_like where is_like = 1 group by child_Id order by likes DESC) as abc group by likes order by likes DESC LIMIT 10";
 		Transaction transaction = session.getTransaction();
 		
+		String temp = "select child_Id, COUNT(is_like) as likes from child_view_like where is_like = 1 group by child_Id order by likes DESC";
+		
 		transaction.begin();
-		Query query = session.createQuery(queryString);
-		log.debug(" ChildViewerLikeInfoDao.getQuery() :: " + query);
+		Query query = session.createSQLQuery(temp);
+		List<Object[]> objList = query.list();
+		System.out.println("After result found");
+		
+		for (Object[] object : objList) {
+			System.out.println("--> " + object[0]);
+			System.out.println("--> " + object[1]);
+		}
+		
+		log.debug(" ChildViewerLikeInfoDao.getQuery() :: " );
 		System.out.println(" ChildViewerLikeInfoDao.getQuery() :: " + query);
 		log.debug("END :: ChildViewerLikeInfoDao.getQuery()");
 		return query;

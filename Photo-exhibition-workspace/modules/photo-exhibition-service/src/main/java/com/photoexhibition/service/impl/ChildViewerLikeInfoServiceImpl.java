@@ -41,7 +41,7 @@ public class ChildViewerLikeInfoServiceImpl implements ChildViewerLikeInfoServic
 
 	@Override
 	public List<ChildInfoVO> getChildInfoVOByTopLimit(int topLimit) {
-		return null;
+		return childViewerLikeInfoDao.getChildInfoVOUptoTopLimit(topLimit);
 	}
 
 	@Override
