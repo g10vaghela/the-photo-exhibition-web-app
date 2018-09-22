@@ -7,7 +7,12 @@
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletMode"%>
 <%@page import="com.photoexhibition.portlet.util.CommonUtil"%>
 <%@include file="../../init.jsp" %>
+<style>
+.container {
+    position: relative;
+}
 
+</style>
 <% 
 AdvertiseInfo advertise = null;
 ChildInfo child = null;
@@ -25,12 +30,12 @@ boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 </liferay-portlet:renderURL>
 
 <div class="photo-exhb-display-container">
-	<div class="row">
+	<!-- <div class="row">
 		<div class="col-md-12">
 			<div class="section-title-b">Photo Exhibition Display</div>
 		</div>
 	</div>
-
+ -->
 	<div class="card-horizontal main-content-card">
 		<div aria-multiselectable="true" class="panel-group" role="tablist">
 			<div class="panel-body photo-exhb-display-body">
@@ -50,23 +55,36 @@ boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 								className="com.photoexhibition.service.vo.PhotoExhbDisplayVo"
 								modelVar="exhbItem" >
 
-								<c:if test="${((i == 0) || (i==5) || (i==8) || (i==10))}">
+								<c:if test="${((i == 0) || (i==5) || (i==8))}">
 									<tr>	
 								</c:if>
 								<c:if test="<%=!exhbItem.isAdvertise() %>">
 									<% child = exhbItem.getChildInfo(); %>
-									<td class="common-cell child-cell" style="width:20%;height:325px;">
-										<div style="padding: 5px 5px 0px 5px;height: 86%;">
-											<img src="<%=child.getPhotoUrl() %>" alt='<%="image of "+child.getFullName() %>' style="width:100%;max-height:325px;"/>
+									<td class="common-cell child-cell" style="width:20%;height:200px;">
+										<div style="padding: 5px 5px 0px 5px;height: 85%;">
+											<img src="<%=child.getPhotoUrl() %>" alt='<%="image of "+child.getFullName() %>' style="width:100%;max-height:200px;"/>
 										</div>
-										<div class="child-details-wrapper"><span class="child-details"> <%= child.getChildId() +" - " +child.getFullName() +" - " +exhbItem.getTotalLike()  %> </span></div>
+										<div class="child-details-wrapper" style="font-size:12px;">
+											<span class="child-details" style="width: 83%;display: inline-block;">
+												 <%= child.getChildId() +" - " +child.getFullName() %> 
+											</span>
+											
+											<%-- <span style="border: 2px solid red;border-radius: 50%;"><%= exhbItem.getTotalLike()  %></span> --%>
+											 <span style="position:relative;">
+  <img src="<%=request.getContextPath()%>/images/heart3.png">
+  <span class="text-block" style="color:white;position: absolute;top: 0px;right: 6px;">
+    <%= exhbItem.getTotalLike()  %>
+  </span>
+</span>
+											<!-- <img src="<%=request.getContextPath()%>/images/like.png"> -->
+										</div>
 									</td>		
 								</c:if>
 								<c:if test="<%=exhbItem.isAdvertise() %>">
 									<% advertise = exhbItem.getAdvertise(); %>
-									<td class="common-cell advertise-cell" colspan="3" rowspan="2" style="height:650px;">
+									<td class="common-cell advertise-cell" colspan="3" rowspan="2" style="height:400px;">
 										<div style="padding:5px;">
-		                    				<img alt="<%= advertise.getAdvertiseName() %>" src="<%= advertise.getAdvertisePhotoUrl() %>" style="width:100%;max-height:650px;">
+		                    				<img alt="<%= advertise.getAdvertiseName() %>" src="<%= advertise.getAdvertisePhotoUrl() %>" style="width:100%;max-height:400px;">
 										</div>
 									</td>
 								</c:if>
@@ -107,6 +125,6 @@ boolean isCurrentPageLastPage = (currentPageIndex == lastPageIndex);
 
 	$(document).ready(function() {
 		console.log(" doc ready... ");
-		setTimeout( executeIteratorUrl , 10000);
+		//setTimeout( executeIteratorUrl , 15000);
 	});
 </script>
